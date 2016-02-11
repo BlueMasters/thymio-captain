@@ -29,9 +29,23 @@
             'thymioCaptain.rest',      // communication with server
             'thymio.modals',    // create and pop modals
             'ngAnimate',        // angular animation support
+            'ngRoute',          // angular routing support
             'toaster'           // library to show toasts
-        ] );
+        ] ).config( configure );
 
+    // ----------------------------------------------------
 
+    function configure( $routeProvider ){
+        $routeProvider.
+        when('/running', {
+            templateUrl: 'html/public/running.html',
+            controller: 'RunningCtrl',
+            controllerAs: 'ctrl'
+        }).otherwise({
+            templateUrl: 'html/public/main.html',
+            controller: 'MainCtrl',
+            controllerAs: 'ctrl'
+        });
+    }
 
 }());
