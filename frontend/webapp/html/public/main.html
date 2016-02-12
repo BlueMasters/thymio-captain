@@ -2,14 +2,15 @@
 
 <div class="mdl-grid">
     <!-- left column -->
-    <div class="mdl-cell mdl-cell--9-col mdl-cell--4-col-tablet grid-left">
+    <div dnd-list="ctrl.actions" class="mdl-cell mdl-cell--9-col mdl-cell--4-col-tablet grid-left"
+         dnd-drop="dropCallback(event, index, item, external)">
 
         <!-- card -->
         <div class="demo-card-image mdl-card mdl-shadow--2dp"
              ng-repeat="i in ctrl.actions"
-             ng-model="ctrl.actions" data-drag="true"
-             data-jqyoui-options="{helper: 'clone'}"
-             jqyoui-draggable="{index: {{$index}}, animate: false, placeholder: 'keep'}">
+             dnd-draggable="i"
+
+             dnd-effect-allowed="copy">
             <div class="mdl-card__title mdl-card--expand align-center" style="background-color: transparent;">
                 <img src="img/thymio/{{i.id}}.png" style="max-height: 100px">
             </div>
@@ -22,14 +23,13 @@
     <!-- right column -->
     <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet grid-right">
         <h2 class="align-center">Ton programme</h2>
-        <div id="drop" data-drop="true" ng-model="ctrl.program" jqyoui-droppable="{deepCopy: true, multiple:true}"
-             class="mdl-shadow--6dp">
+        <div id="drop" dnd-list="ctrl.program" class="mdl-shadow--6dp">
             <!-- card -->
             <div class="mdl-card mdl-shadow--2dp"
                  ng-repeat="i in ctrl.program track by $index"
-                 ng-model="ctrl.program"
-                 data-drag="true"
-                 jqyoui-draggable="{index: {{$index}}, animate: false}"
+                 dnd-draggable="i"
+                 dnd-moved="ctrl.program.splice($index, 1)"
+                 dnd-effect-allowed="move"
             >
 
                 <div class="mdl-card__title">

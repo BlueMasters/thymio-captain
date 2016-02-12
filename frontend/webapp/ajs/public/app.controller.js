@@ -28,6 +28,11 @@
         self.actions = ActionsService.actions();
         self.program = [];
 
+        $scope.dropCallback = function(event, index, item, external){
+            console.log(external);
+           return external;
+        };
+
         $scope.remove = function(array, index) {
             array = array.splice(index, 1);
             console.log("remove");
