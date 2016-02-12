@@ -2,7 +2,7 @@
 
 <div class="mdl-grid">
     <!-- left column -->
-    <div class="mdl-cell mdl-cell--9-col grid-left">
+    <div class="mdl-cell mdl-cell--9-col mdl-cell--4-col-tablet grid-left">
 
         <!-- card -->
         <div class="demo-card-image mdl-card mdl-shadow--2dp"
@@ -20,8 +20,10 @@
     </div>
 
     <!-- right column -->
-    <div class="mdl-cell mdl-cell--3-col grid-right">
-        <div id="drop" data-drop="true" ng-model="ctrl.program" jqyoui-droppable="{deepCopy: true, multiple:true}">
+    <div class="mdl-cell mdl-cell--3-col mdl-cell--4-col-tablet grid-right">
+        <h2 class="align-center">Ton programme</h2>
+        <div id="drop" data-drop="true" ng-model="ctrl.program" jqyoui-droppable="{deepCopy: true, multiple:true}"
+             class="mdl-shadow--6dp">
             <!-- card -->
             <div class="mdl-card mdl-shadow--2dp"
                  ng-repeat="i in ctrl.program track by $index"
