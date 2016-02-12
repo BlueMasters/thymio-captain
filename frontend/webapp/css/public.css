@@ -1,0 +1,109 @@
+/* Style Select Field */
+
+select {
+    font-family: inherit;
+    background-color: transparent;
+    width: 100%;
+    padding: 4px 0;
+    font-size: 16px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+/* Remove focus */
+
+select:focus {
+    outline: none;
+}
+
+/* Hide label */
+
+.mdl-selectfield label {
+    display: none;
+}
+
+/* Use custom arrow */
+
+.mdl-selectfield select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.mdl-selectfield {
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    position: relative;
+}
+
+.mdl-selectfield:after {
+    position: absolute;
+    top: 0.75em;
+    right: 0.5em;
+    /* Styling the down arrow */
+    width: 0;
+    height: 0;
+    padding: 0;
+    content: '';
+    border-left: .25em solid transparent;
+    border-right: .25em solid transparent;
+    border-top: 0.375em solid rgba(0, 0, 0, 0.12);
+    pointer-events: none;
+}
+
+/* ==========  public CSS ========== */
+
+.mdl-card {
+    margin: 10px;
+}
+
+.align-center {
+    text-align: center;
+}
+
+/* ==========  grid-left ========== */
+
+.grid-left .mdl-card {
+    width: 200px;
+    text-align: center;
+    float: left;
+}
+
+.grid-left .mdl-card img {
+    margin: auto;
+}
+
+.grid-left .mdl-card__actions {
+    font-weight: bold;
+    background-color: #aa00ff;
+    color: white;
+}
+
+/* ==========  grid-right ========== */
+
+.grid-right .mdl-card {
+    width: 90%;
+    margin: 10px auto;
+    text-align: center;
+    border-color: #eee;
+    min-height: 0px;
+}
+
+.grid-right .mdl-card__supporting-text {
+    padding-top: 0;
+}
+
+.grid-right select.ng-invalid {
+    border-color: red;
+    color: red;
+}
+
+.grid-right select.ng-invalid:focus {
+    border-color: red;
+    color: inherit;
+}
+
+#drop {
+    height: 100%;
+    border: 1px solid black;
+    padding-bottom: 200px;
+}

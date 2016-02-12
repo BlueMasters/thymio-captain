@@ -22,11 +22,16 @@
 
     // --------------------------
 
-    function MainCtrl( $rootScope, $scope, RestService, toaster ){
+    function MainCtrl( $scope, RestService, ActionsService ){
 
         var self = this;
+        self.actions = ActionsService.actions();
+        self.program = [];
 
-        self.test = "it is working";
+        $scope.remove = function(array, index) {
+            array = array.splice(index, 1);
+            console.log("remove");
+        }
         
     }
 
