@@ -22,11 +22,12 @@
 
     // --------------------------
 
-    function MainCtrl( RestService, Action ){
+    function MainCtrl( $rootScope, RestService, Action, History ){
 
         var self = this;
         self.actions = Action.actionsList();
-        self.program = [];
+        $rootScope.program = [];
+        History.watch('program');
 
         self.actionsDdConfig = {
             containment: '.grid-right',
@@ -36,6 +37,14 @@
         self.programDdConfig = {
             containment: 'body',
             allowDuplicates: true
+        };
+
+        self.undo = function(){
+            History.undo('program');
+        };
+
+        self.redo = function(){
+            History.redo('program');
         };
 
 

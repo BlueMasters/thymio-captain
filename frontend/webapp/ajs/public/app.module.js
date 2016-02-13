@@ -31,7 +31,8 @@
             'thymio.modals',    // create and pop modals
             'ngAnimate',        // angular animation support
             'ngRoute',        // angular routing support
-            'as.sortable'
+            'as.sortable',
+            'decipher.history'
         ] ).config( configure );
 
     // ----------------------------------------------------

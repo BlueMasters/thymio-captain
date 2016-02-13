@@ -1,68 +1,26 @@
-{{ctrl.test}}
+<div class="header" style="padding: 10px; margin-bottom: 10px;">
+    <!-- Colored FAB button -->
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+        <i class="material-icons">backup</i>
+    </button>
+    <!-- Colored FAB button with ripple -->
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+        <i class="material-icons">help</i>
+    </button>
+    <!-- Colored FAB button with ripple -->
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+        <i class="material-icons">play_circle_outline</i>
+    </button>
+    <!-- Colored FAB button with ripple -->
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
+            ng-click="ctrl.undo()">
+        <i class="material-icons">undo</i>
+    </button>
+    <!-- Colored FAB button with ripple -->
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
+            ng-click="ctrl.redo()">
+        <i class="material-icons">redo</i>
+    </button>
+</div>
 
-<div class="mdl-grid">
-    <!-- left column -->
-    <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet grid-left"
-         data-as-sortable="ctrl.actionsDdConfig"
-         data-ng-model="ctrl.actions">
-        <!--as-sortable-->
-        <div data-ng-repeat="i in ctrl.actions" data-as-sortable-item style="display:inline-block">
-            <!-- card -->
-            <div data-as-sortable-item-handle class="demo-card-image mdl-card mdl-shadow--2dp">
-                <!--img-->
-                <div class="mdl-card__title mdl-card--expand align-center" style="background-color: transparent;">
-                    <img src="img/thymio/{{i.type}}.png" style="max-width: 100px; width:100%">
-                </div>
-                <!--title-->
-                <div class="mdl-card__actions align-center">{{i.title()}}</div>
-            </div>
-            <!--end card-->
-        </div>
-        <!--end as-sortable-->
-    </div>
-    <!--end left column-->
-
-
-    <!-- right column -->
-    <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet grid-right">
-        <h2 class="align-center">Ton programme</h2>
-        <!--drop container-->
-        <div id="drop" class="mdl-shadow--6dp" data-as-sortable="ctrl.programDdConfig"
-             data-ng-model="ctrl.program">
-            <!--as sortable item-->
-            <div data-ng-repeat="i in ctrl.program" data-as-sortable-item class="grid-right-sortable">
-                <!-- card -->
-                <div class="mdl-card">
-                    <!--title-->
-                    <div class="mdl-card__title" data-as-sortable-item-handle>
-                        {{i.title()}}
-                    </div>
-                    <!--select-->
-                    <div class="mdl-card__supporting-text">
-                        <div class="mdl-selectfield">
-                            <select ng-model="i.param" required>
-                                <option style="color:red" value="" selected disabled hidden>configurer...</option>
-                                <option ng-repeat="option in i.args()"
-                                        value="{{option.id}}">{{option.descr}}
-                                </option>
-                            </select>
-
-                        </div>
-                    </div>
-                    <!--delete icon-->
-                    <div class="mdl-card__menu">
-                        <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
-                                ng-click="ctrl.remove(ctrl.program, $index); $event.stopPropagation();">
-                            <i class="material-icons">delete</i>
-                        </button>
-                    </div>
-                </div>
-                <!--end card-->
-            </div>
-            <!--end sortable item-->
-        </div>
-        <!--end drop container-->
-    </div>
-    <!--end right column-->
-</div><!-- end grid-->
-
+<div ng-include src="'html/public/main_content.html'"></div>
