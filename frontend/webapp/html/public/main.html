@@ -5,40 +5,51 @@
     <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet grid-left"
          data-as-sortable="ctrl.actionsDdConfig"
          data-ng-model="ctrl.actions">
+        <!--as-sortable-->
         <div data-ng-repeat="i in ctrl.actions" data-as-sortable-item style="display:inline-block">
             <!-- card -->
             <div data-as-sortable-item-handle class="demo-card-image mdl-card mdl-shadow--2dp">
+                <!--img-->
                 <div class="mdl-card__title mdl-card--expand align-center" style="background-color: transparent;">
-                    <img src="img/thymio/{{i.id}}.png" style="max-width: 100px; width:100%">
+                    <img src="img/thymio/{{i.type}}.png" style="max-width: 100px; width:100%">
                 </div>
-                <div class="mdl-card__actions align-center">{{i.title}}</div>
+                <!--title-->
+                <div class="mdl-card__actions align-center">{{i.title()}}</div>
             </div>
+            <!--end card-->
         </div>
+        <!--end as-sortable-->
     </div>
+    <!--end left column-->
 
 
     <!-- right column -->
     <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet grid-right">
         <h2 class="align-center">Ton programme</h2>
+        <!--drop container-->
         <div id="drop" class="mdl-shadow--6dp" data-as-sortable="ctrl.programDdConfig"
              data-ng-model="ctrl.program">
-            <!-- card -->
+            <!--as sortable item-->
             <div data-ng-repeat="i in ctrl.program" data-as-sortable-item class="grid-right-sortable">
+                <!-- card -->
                 <div class="mdl-card">
-
+                    <!--title-->
                     <div class="mdl-card__title" data-as-sortable-item-handle>
-                        {{i.title}}
+                        {{i.title()}}
                     </div>
+                    <!--select-->
                     <div class="mdl-card__supporting-text">
                         <div class="mdl-selectfield">
-                            <select ng-model="i.arg" required>
+                            <select ng-model="i.param" required>
                                 <option style="color:red" value="" selected disabled hidden>configurer...</option>
-                                <option ng-repeat="option in i.args track by $index" value="{{$index}}">{{option.descr}}
+                                <option ng-repeat="option in i.args()"
+                                        value="{{option.id}}">{{option.descr}}
                                 </option>
                             </select>
 
                         </div>
                     </div>
+                    <!--delete icon-->
                     <div class="mdl-card__menu">
                         <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
                                 ng-click="ctrl.remove(ctrl.program, $index); $event.stopPropagation();">
@@ -46,7 +57,12 @@
                         </button>
                     </div>
                 </div>
+                <!--end card-->
             </div>
+            <!--end sortable item-->
         </div>
+        <!--end drop container-->
     </div>
+    <!--end right column-->
 </div><!-- end grid-->
+

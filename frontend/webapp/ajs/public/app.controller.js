@@ -22,10 +22,10 @@
 
     // --------------------------
 
-    function MainCtrl( $scope, RestService, ActionsService ){
+    function MainCtrl( RestService, Action ){
 
         var self = this;
-        self.actions = ActionsService.actions();
+        self.actions = Action.actionsList();
         self.program = [];
 
         self.actionsDdConfig = {
