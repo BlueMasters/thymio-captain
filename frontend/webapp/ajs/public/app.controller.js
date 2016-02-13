@@ -28,14 +28,19 @@
         self.actions = ActionsService.actions();
         self.program = [];
 
-        $scope.dropCallback = function(event, index, item, external){
-            console.log(external);
-           return external;
+        self.actionsDdConfig = {
+            containment: '.grid-right',
+            clone: true
         };
 
-        $scope.remove = function(array, index) {
-            array = array.splice(index, 1);
-            console.log("remove");
+        self.programDdConfig = {
+            containment: 'body',
+            allowDuplicates: true
+        };
+
+
+        self.remove = function(array, index){
+           array.splice(index,1);
         }
         
     }

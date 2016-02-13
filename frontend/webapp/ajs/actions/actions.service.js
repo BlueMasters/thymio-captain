@@ -109,7 +109,7 @@
                 }]
             }, {
                 id   : "SetTopColor",
-                title: "changer la couleur du dessus",
+                title: "couleur du dessus",
                 args : [{
                     id   : "off",
                     descr: "éteindre"
@@ -134,7 +134,7 @@
                 }]
             }, {
                 id   : "SetBottomColor",
-                title: "changer la couleur du dessous",
+                title: "couleur du dessous",
                 args : [{
                     id   : "off",
                     descr: "éteindre"

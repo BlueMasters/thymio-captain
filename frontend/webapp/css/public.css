@@ -54,22 +54,50 @@ select:focus {
     pointer-events: none;
 }
 
+/*ng invalid*/
+
+select.ng-invalid {
+    border-color: red;
+    color: red;
+}
+
+select.ng-invalid:focus {
+    border-color: red;
+    color: inherit;
+}
+
 /* ==========  public CSS ========== */
 
 .mdl-card {
     margin: 10px;
+    min-height: 0px;
 }
 
 .align-center {
     text-align: center;
 }
 
+/* ==========  dragged ========== */
+
+.as-sortable-dragging  {
+    border:none;
+    box-shadow: none;
+}
+
+
+.as-sortable-dragging .as-sortable-item {
+    max-width: 100% !important;
+}
+
 /* ==========  grid-left ========== */
 
+.grid-left .as-sortable-item {
+    max-width: 30%;
+    margin:3px;
+}
 .grid-left .mdl-card {
-    width: 200px;
+    width: 100%;
     text-align: center;
-    float: left;
 }
 
 .grid-left .mdl-card img {
@@ -91,6 +119,7 @@ select:focus {
     bottom: 10px;
     padding-right: 30px;
 }
+
 .grid-right .mdl-card {
     width: 90%;
     margin: 10px auto;
@@ -103,18 +132,11 @@ select:focus {
     padding-top: 0;
 }
 
-.grid-right select.ng-invalid {
-    border-color: red;
-    color: red;
-}
-
-.grid-right select.ng-invalid:focus {
-    border-color: red;
-    color: inherit;
-}
-
 #drop {
     height: 100%;
+    width: 90%;
     border: 1px solid #ddd;
     padding-bottom: 200px;
+    position: absolute;
+    overflow: auto;
 }
