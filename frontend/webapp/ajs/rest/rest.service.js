@@ -59,7 +59,7 @@
              * The body of the answer is the JSON encoded program.
              * @returns {httpPromise} resolves with the program, or fails with error description.
              */
-            getProgram: {method: 'GET', url: baseUrl + ':id/program', params: {id: '@id'}},
+            getProgram: {method: 'GET', url: baseUrl + ':id/program', params: {id: '@id'}, isArray: true},
 
 
             /**
@@ -108,7 +108,7 @@
              * Upload the code to the associated robot. Returns an error if the robot is not associated.
              * @returns {httpPromise} resolves, or fails with error description.
              */
-            upload: {method: 'GET', url: baseUrl + 'session/:id/upload', params: {id: '@id'}},
+            uploadProgram: {method: 'GET', url: baseUrl + 'session/:id/upload', params: {id: '@id'}},
 
 
             /* ===================================================================*/
@@ -132,7 +132,7 @@
              * Returns a list of associations (admin only)
              * @returns {httpPromise} resolves with the list, or fails with error description.
              */
-            upload: {method: 'GET', url: baseUrl + 'associations', params: {id: '@id'}, isArray: true}
+            getAssociations: {method: 'GET', url: baseUrl + 'associations', params: {id: '@id'}, isArray: true}
         })
     }
 

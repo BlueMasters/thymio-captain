@@ -26,32 +26,87 @@
 
         var self = this;
         self.actions = Action.actionsList();
+        self.cardId = "card-id"; //TODO
         $rootScope.program = [];
-        History.watch('program');
+        _init();
 
-        self.actionsDdConfig = {
-            containment: '.grid-right',
-            clone: true
-        };
+        //##------------ undo redo
+        History.watch( 'program' );
 
-        self.programDdConfig = {
-            containment: 'body',
-            allowDuplicates: true
-        };
 
         self.undo = function(){
-            History.undo('program');
+            History.undo( 'program' );
         };
 
         self.redo = function(){
-            History.redo('program');
+            History.redo( 'program' );
         };
 
+        //##------------ drag and drop
 
-        self.remove = function(array, index){
-           array.splice(index,1);
+        self.actionsDdConfig = {
+            containment: '.grid-right',
+            clone      : true
+        };
+
+        self.programDdConfig = {
+            containment    : 'body',
+            allowDuplicates: true
+        };
+
+        //##------------ rest
+
+        self.save = function(){
+            var prog = [];
+            angular.forEach( $rootScope.program, function( action ){
+                prog.push( action.toJson() );
+            } );
+            RestService.saveProgram( {id: self.cardId}, prog, function(){
+                self.showToast( 'program saved' );
+            }, _log );  // TODO errors
+        };
+
+        self.upload = function(){
+            RestService.uploadProgram({id: self.cardId}, _log, _log);
+        };
+
+        self.run = function(){
+            RestService.run({id: self.cardId}, _log, _log);
+        };
+
+        self.stop = function(){
+            RestService.stop({id: self.cardId}, _log, _log);
+        };
+
+        //##------------ utils
+
+
+        self.remove = function( array, index ){
+            array.splice( index, 1 );
+        };
+
+        self.showToast = function( message ){
+            $( '.mdl-js-snackbar' )[0].MaterialSnackbar.showSnackbar(
+                {
+                    message: message,
+                    timeout: 2000
+                }
+            );
+        };
+
+        // ----------------------------------------------------
+
+
+        function _init(){
+            RestService.getProgram( {id: self.cardId}, function( data ){
+                $rootScope.program = Action.fromJson( data );
+            }, _log );
         }
-        
+
+        function _log( o ){
+            console.log( o );
+        }
+
     }
 
 }());

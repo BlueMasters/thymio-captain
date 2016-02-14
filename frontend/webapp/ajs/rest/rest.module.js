@@ -19,6 +19,9 @@
      * This module handles the interaction with the server and the app front end.
      */
     angular
-        .module( 'thymioCaptain.rest', ['ngResource'] );
+        .module( 'thymioCaptain.rest', ['ngResource'] )
+        .config( ['$httpProvider', function( $httpProvider ){
+            $httpProvider.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+        }] );
 
 }());

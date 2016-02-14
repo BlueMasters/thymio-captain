@@ -7,9 +7,9 @@
 
     function ActionFactory(){
 
-        function Action( type ){
+        function Action( type, param ){
             this.type = type;
-            this.param = null;
+            this.param = param || null;
 
             this.args = function(){
                 return ACTIONS[this.type].args;
@@ -21,6 +21,7 @@
         }
 
         Action.actionsList = getAvailActions;
+        Action.fromJson = fromJson;
         Action.prototype.asJson = asJson;
 
         // ----------------------------------------------------
@@ -33,6 +34,17 @@
             var array = [];
             for( var key in ACTIONS ){
                 array.push( new Action( key ) );
+            }
+
+            return array;
+        }
+
+
+        function fromJson( obj ){
+            if( typeof obj === "string" ) obj = JSON.parse( obj );
+            var array = [];
+            for( var i in obj ){
+                array.push( new Action( obj[i].Action, obj[i].Param ) );
             }
 
             return array;

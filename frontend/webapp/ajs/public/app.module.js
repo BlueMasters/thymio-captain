@@ -26,28 +26,11 @@
     angular.module( 'thymioCaptain.app',
         // dependencies
         [
-            'thymioCaptain.rest',      // communication with server
+            'thymioCaptain.rest',
             'thymioCaptain.actions',
-            'thymio.modals',    // create and pop modals
-            'ngAnimate',        // angular animation support
-            'ngRoute',        // angular routing support
+            'ngAnimate',
             'as.sortable',
             'decipher.history'
-        ] ).config( configure );
-
-    // ----------------------------------------------------
-
-    function configure( $routeProvider ){
-        $routeProvider.
-        when( '/running', {
-            templateUrl : 'html/public/running.html',
-            controller  : 'RunningCtrl',
-            controllerAs: 'ctrl'
-        } ).otherwise( {
-            templateUrl : 'html/public/main.html',
-            controller  : 'MainCtrl',
-            controllerAs: 'ctrl'
-        } );
-    }
+        ] );
 
 }());

@@ -1,22 +1,25 @@
 <div class="header" style="padding: 10px; margin-bottom: 10px;">
-    <!-- Colored FAB button -->
-    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+    <!-- save in the cloud -->
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
+    ng-click="ctrl.save()">
         <i class="material-icons">backup</i>
     </button>
-    <!-- Colored FAB button with ripple -->
-    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+    <!-- help -->
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
+    ng-click="ctrl.help()">
         <i class="material-icons">help</i>
     </button>
-    <!-- Colored FAB button with ripple -->
-    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+    <!-- upload -->
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
+    ng-click="ctrl.upload()">
         <i class="material-icons">play_circle_outline</i>
     </button>
-    <!-- Colored FAB button with ripple -->
+    <!-- undo -->
     <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
             ng-click="ctrl.undo()">
         <i class="material-icons">undo</i>
     </button>
-    <!-- Colored FAB button with ripple -->
+    <!-- redo -->
     <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
             ng-click="ctrl.redo()">
         <i class="material-icons">redo</i>
