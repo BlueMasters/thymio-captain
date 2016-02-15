@@ -33,9 +33,7 @@ const (
 	sessionKey = "session-key"
 	prefix     = "/v1"
 	cardC      = "cards"
-	cardId     = "CardId"
 	robotC     = "robots"
-	robotName  = "RobotName"
 )
 
 type Info struct {
@@ -85,8 +83,7 @@ func GetCard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var card Card
-	log.Debug(bson.M{cardId: vars[cardId]})
-	err = database.C(cardC).Find(bson.M{"cardId": vars[cardId]}).One(&card)
+	err = database.C(cardC).Find(bson.M{"cardId": vars["cardId"]}).One(&card)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		log.Info(err)
@@ -114,10 +111,10 @@ func PutCard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var card Card
-	card.CardId = vars[cardId]
+	card.CardId = vars["cardId"]
 	card.Program = payload.Program
 
-	_, err = database.C(cardC).Upsert(bson.M{"cardId": vars[cardId]}, card)
+	_, err = database.C(cardC).Upsert(bson.M{"cardId": vars["cardId"]}, card)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 500)
@@ -133,7 +130,7 @@ func GetInfo(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var info Info
-	if cardId, ok := session.Values[cardId]; ok {
+	if cardId, ok := session.Values["cardId"]; ok {
 		info.CardId = cardId.(string)
 	}
 
@@ -150,7 +147,7 @@ func AssociateRobot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	n, err := database.C(cardC).Find(bson.M{"cardId": vars[cardId]}).Count()
+	n, err := database.C(cardC).Find(bson.M{"cardId": vars["cardId"]}).Count()
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -162,8 +159,8 @@ func AssociateRobot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = database.C(robotC).Update(
-		bson.M{"name": vars[robotName]},
-		bson.M{"$set": bson.M{"cardId": vars[cardId]}})
+		bson.M{"name": vars["robotName"]},
+		bson.M{"$set": bson.M{"cardId": vars["cardId"]}})
 
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
@@ -180,7 +177,7 @@ func DissociateRobot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = database.C(robotC).Update(
-		bson.M{"name": vars[robotName]},
+		bson.M{"name": vars["robotName"]},
 		bson.M{"$set": bson.M{"cardId": ""}})
 
 	if err != nil {
@@ -198,7 +195,7 @@ func GetRobot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var robot Robot
-	err = database.C(robotC).Find(bson.M{"name": vars[robotName]}).One(&robot)
+	err = database.C(robotC).Find(bson.M{"name": vars["robotName"]}).One(&robot)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -225,11 +222,11 @@ func PutRobot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var robot Robot
-	robot.Name = vars[robotName]
+	robot.Name = vars["robotName"]
 	robot.URL = payload.URL
 	robot.CardId = ""
 
-	_, err = database.C(robotC).Upsert(bson.M{"name": vars[robotName]}, robot)
+	_, err = database.C(robotC).Upsert(bson.M{"name": vars["robotName"]}, robot)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 500)
@@ -244,7 +241,7 @@ func DelRobot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = database.C(robotC).RemoveAll(bson.M{"name": vars[robotName]})
+	_, err = database.C(robotC).RemoveAll(bson.M{"name": vars["robotName"]})
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -277,7 +274,7 @@ func Run(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var robot Robot
-	err = database.C(robotC).Find(bson.M{"cardId": vars[cardId]}).One(&robot)
+	err = database.C(robotC).Find(bson.M{"cardId": vars["cardId"]}).One(&robot)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -297,7 +294,7 @@ func Stop(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var robot Robot
-	err = database.C(robotC).Find(bson.M{"cardId": vars[cardId]}).One(&robot)
+	err = database.C(robotC).Find(bson.M{"cardId": vars["cardId"]}).One(&robot)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -317,7 +314,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var robot Robot
-	err = database.C(robotC).Find(bson.M{"cardId": vars[cardId]}).One(&robot)
+	err = database.C(robotC).Find(bson.M{"cardId": vars["cardId"]}).One(&robot)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -325,7 +322,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var card Card
-	err = database.C(cardC).Find(bson.M{"cardId": vars[cardId]}).One(&card)
+	err = database.C(cardC).Find(bson.M{"cardId": vars["cardId"]}).One(&card)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -352,6 +349,8 @@ func (s *CorsServer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if req.Method == "OPTIONS" {
 		return
 	}
+	rw.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
 	// Lets Gorilla work
 	s.r.ServeHTTP(rw, req)
 }
@@ -388,20 +387,20 @@ func main() {
 
 	r.HandleFunc(prefix+"/info", GetInfo).Methods("GET")
 
-	r.HandleFunc(prefix+"/card/{"+cardId+"}", GetCard).Methods("GET")
-	r.HandleFunc(prefix+"/card/{"+cardId+"}", PutCard).Methods("PUT", "POST")
+	r.HandleFunc(prefix+"/card/{cardId}", GetCard).Methods("GET")
+	r.HandleFunc(prefix+"/card/{cardId}", PutCard).Methods("PUT", "POST")
 
-	r.HandleFunc(prefix+"/robot/{"+robotName+"}", GetRobot).Methods("GET")
-	r.HandleFunc(prefix+"/robot/{"+robotName+"}", PutRobot).Methods("PUT", "POST")
-	r.HandleFunc(prefix+"/robot/{"+robotName+"}", DelRobot).Methods("DELETE")
+	r.HandleFunc(prefix+"/robot/{robotName}", GetRobot).Methods("GET")
+	r.HandleFunc(prefix+"/robot/{robotName}", PutRobot).Methods("PUT", "POST")
+	r.HandleFunc(prefix+"/robot/{robotName}", DelRobot).Methods("DELETE")
 
-	r.HandleFunc(prefix+"/robot/{"+robotName+"}/card/{"+cardId+"}", AssociateRobot).Methods("PUT", "POST")
-	r.HandleFunc(prefix+"/robot/{"+robotName+"}/card", DissociateRobot).Methods("DELETE")
+	r.HandleFunc(prefix+"/robot/{robotName}/card/{cardId}", AssociateRobot).Methods("PUT", "POST")
+	r.HandleFunc(prefix+"/robot/{robotName}/card", DissociateRobot).Methods("DELETE")
 
 	r.HandleFunc(prefix+"/robots", GetRobots).Methods("GET")
-	r.HandleFunc(prefix+"/card/{"+cardId+"}/run", Run).Methods("GET")
-	r.HandleFunc(prefix+"/card/{"+cardId+"}/stop", Stop).Methods("GET")
-	r.HandleFunc(prefix+"/card/{"+cardId+"}/upload", Upload).Methods("GET")
+	r.HandleFunc(prefix+"/card/{cardId}/run", Run).Methods("GET")
+	r.HandleFunc(prefix+"/card/{cardId}/stop", Stop).Methods("GET")
+	r.HandleFunc(prefix+"/card/{cardId}/upload", Upload).Methods("GET")
 
 	http.Handle("/", &CorsServer{r})
 
