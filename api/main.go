@@ -163,7 +163,7 @@ func AssociateRobot(w http.ResponseWriter, r *http.Request) {
 
 	err = database.C(robotC).Update(
 		bson.M{"name": vars[robotName]},
-		bson.M{"$set": bson.M{cardId: vars[cardId]}})
+		bson.M{"$set": bson.M{"cardId": vars[cardId]}})
 
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
