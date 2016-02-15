@@ -73,7 +73,7 @@ func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string
 	session, err = store.Get(r, sessionKey)
 	if err != nil {
 		log.Error(err.Error())
-		http.Error(w, "Session Error", 500)
+		http.Error(w, "session error", 500)
 	}
 	return
 }
@@ -122,7 +122,7 @@ func PutCard(w http.ResponseWriter, r *http.Request) {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 500)
 	} else {
-		json.NewEncoder(w).Encode(JsonOK{"Done"})
+		json.NewEncoder(w).Encode(JsonOK{"done"})
 	}
 }
 
@@ -169,7 +169,7 @@ func AssociateRobot(w http.ResponseWriter, r *http.Request) {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
 	} else {
-		json.NewEncoder(w).Encode(JsonOK{"Done"})
+		json.NewEncoder(w).Encode(JsonOK{"done"})
 	}
 }
 
@@ -187,7 +187,7 @@ func DissociateRobot(w http.ResponseWriter, r *http.Request) {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
 	} else {
-		json.NewEncoder(w).Encode(JsonOK{"Done"})
+		json.NewEncoder(w).Encode(JsonOK{"done"})
 	}
 }
 
@@ -234,7 +234,7 @@ func PutRobot(w http.ResponseWriter, r *http.Request) {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 500)
 	} else {
-		json.NewEncoder(w).Encode(JsonOK{"Done"})
+		json.NewEncoder(w).Encode(JsonOK{"done"})
 	}
 }
 
@@ -250,7 +250,7 @@ func DelRobot(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, string(errorDesc), 400)
 
 	} else {
-		json.NewEncoder(w).Encode(JsonOK{"Done"})
+		json.NewEncoder(w).Encode(JsonOK{"done"})
 	}
 }
 
@@ -286,7 +286,7 @@ func Run(w http.ResponseWriter, r *http.Request) {
 	log.Infof("Sending run command to robot %v", robot.URL)
 	// var client http.Client
 	// _, err = client.Get(robot.URL+"/run"))
-	json.NewEncoder(w).Encode(JsonOK{"Done"})
+	json.NewEncoder(w).Encode(JsonOK{"done"})
 
 }
 
@@ -306,7 +306,7 @@ func Stop(w http.ResponseWriter, r *http.Request) {
 	log.Infof("Sending stop command to robot %v", robot.URL)
 	// var client http.Client
 	// _, err = client.Get(robot.URL+"/stop"))
-	json.NewEncoder(w).Encode(JsonOK{"Done"})
+	json.NewEncoder(w).Encode(JsonOK{"done"})
 
 }
 
@@ -333,7 +333,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 	// var client http.Client
 	// _, err = client.Do(http.NewRequest("PUT", robot.URL+"/upload"), r)
-	json.NewEncoder(w).Encode(JsonOK{"Done"})
+	json.NewEncoder(w).Encode(JsonOK{"done"})
 
 }
 
