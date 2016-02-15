@@ -176,7 +176,7 @@
              * Returns the list of all known robots with the associated card (admin only)
              * @returns {httpPromise} resolves with the list (url,name,cardId), or fails with error description.
              */
-            getRobots: {method: 'GET', url: baseUrl + 'robots', params: {id: '@id'}, isArray: true}
+            getRobots: {method: 'GET', url: baseUrl + 'robots', isArray: true}
         } )
     }
 
