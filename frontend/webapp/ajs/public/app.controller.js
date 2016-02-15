@@ -48,12 +48,17 @@
         self.run = runProgram;
         self.stop = stopProgram;
 
+        self.dial = showRunStopDialog;
+
+        self.test = function(){
+            console.log( 'test' );
+        };
+
         /* *****************************************************************
          * implementation
          * ****************************************************************/
 
         //##------------init
-
 
 
         function _init(){
@@ -69,9 +74,15 @@
             // progState == 0 only if the displayed program matches
             // the one saved in the cloud.
             var h = History.watch( 'program' );
-            h.addChangeHandler('ch', function() { self.progState++; });
-            h.addUndoHandler('uh', function() { self.progState--; });
-            h.addRedoHandler('rh', function() { self.progState++; });
+            h.addChangeHandler( 'ch', function(){
+                self.progState++;
+            } );
+            h.addUndoHandler( 'uh', function(){
+                self.progState--;
+            } );
+            h.addRedoHandler( 'rh', function(){
+                self.progState++;
+            } );
         }
 
         //##------------ drag and drop
@@ -121,7 +132,11 @@
         }
 
         function uploadProgram(){
-            RestService.upload( self.cardIdParam, _log, _log );
+            RestService.upload( self.cardIdParam, showRunStopDialog,
+                function(){
+                    showMessageDialog( "Pas de Thymio", "Tu n'as pas encore de Thymio attribué. Demande de l'aide à un" +
+                        " animateur et réessaie" );
+                } );
         }
 
         function runProgram(){
@@ -132,7 +147,29 @@
             RestService.stop( self.cardIdParam, _log, _log );
         }
 
-        //##------------ utils
+
+        //##------------ dialogs and toasts
+
+        function showMessageDialog( title, msg ){
+            showDialog( {
+                title   : title,
+                text    : msg,
+                positive: {
+                    title: 'Ok'
+                }
+            } );
+        }
+
+        function showRunStopDialog(){
+            showDialog( {
+                customContent: '#runDialogContent',
+                positive     : {
+                    title  : 'fermer',
+                    onClick: self.stop
+                }
+            } );
+        }
+
 
         function showToast( message ){
             $( '.mdl-js-snackbar' )[0].MaterialSnackbar.showSnackbar(
@@ -142,6 +179,8 @@
                 }
             );
         }
+
+        //##------------ utils
 
 
         function _log( o ){

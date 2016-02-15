@@ -79,11 +79,10 @@ select.ng-invalid:focus {
 
 /* ==========  dragged ========== */
 
-.as-sortable-dragging  {
-    border:none;
+.as-sortable-dragging {
+    border: none;
     box-shadow: none;
 }
-
 
 .as-sortable-dragging .as-sortable-item {
     max-width: 100% !important;
@@ -93,8 +92,9 @@ select.ng-invalid:focus {
 
 .grid-left .as-sortable-item {
     max-width: 30%;
-    margin:3px;
+    margin: 3px;
 }
+
 .grid-left .mdl-card {
     width: 100%;
     text-align: center;
@@ -139,4 +139,14 @@ select.ng-invalid:focus {
     padding-bottom: 200px;
     position: absolute;
     overflow: auto;
+}
+
+/* *****************************************************************
+ * dialog
+ * ****************************************************************/
+
+#runDialogContent button {
+    margin: 20px auto;
+    width: 60%;
+    height: 50px;
 }
