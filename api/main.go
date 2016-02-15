@@ -321,10 +321,29 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+type CorsServer struct {
+	r *mux.Router
+}
+
+func (s *CorsServer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	if origin := req.Header.Get("Origin"); origin != "" {
+		rw.Header().Set("Access-Control-Allow-Origin", origin)
+		rw.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		rw.Header().Set("Access-Control-Allow-Headers",
+			"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	}
+	// Stop here if its Preflighted OPTIONS request
+	if req.Method == "OPTIONS" {
+		return
+	}
+	// Lets Gorilla work
+	s.r.ServeHTTP(rw, req)
+}
+
 func main() {
 	var port = flag.Int("port", 8081, "port")
 	var debug = flag.Bool("debug", false, "run in debug mode")
-	var domain = flag.String("domain", "telecom.tk", "Domain name (for the cookie)")
+	var domain = flag.String("domain", "thymio.tk", "Domain name (for the cookie)")
 	var mongoServer = flag.String("mongo-server", "localhost", "MongoDB server URL")
 	var secretKey = flag.String("secret-key", "not-so-secret", "Secret key (for secure cookies)")
 
@@ -350,6 +369,7 @@ func main() {
 	store.Options.Domain = *domain
 
 	r := mux.NewRouter()
+
 	r.HandleFunc(prefix+"/info", GetInfo).Methods("GET")
 
 	r.HandleFunc(prefix+"/card/{"+cardId+"}", GetCard).Methods("GET")
@@ -367,7 +387,8 @@ func main() {
 	r.HandleFunc(prefix+"/card/{"+cardId+"}/stop", Stop).Methods("GET")
 	r.HandleFunc(prefix+"/card/{"+cardId+"}/upload", Upload).Methods("GET")
 
-	http.Handle("/", r)
+	http.Handle("/", &CorsServer{r})
+
 	log.Infof("Ready, listening on port %d", *port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
 }

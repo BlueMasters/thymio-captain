@@ -114,7 +114,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var port = flag.Int("port", 8080, "port")
 	var debug = flag.Bool("debug", false, "run in debug mode")
-	var domain = flag.String("domain", "telecom.tk", "Domain name (for the cookie)")
+	var domain = flag.String("domain", "thymio.tk", "Domain name (for the cookie)")
 	var mongoServer = flag.String("mongo-server", "localhost", "MongoDB server URL")
 	var secretKey = flag.String("secret-key", "not-so-secret", "Secret key (for secure cookies)")
 
