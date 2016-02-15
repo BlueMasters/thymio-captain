@@ -389,13 +389,13 @@ func main() {
 	r.HandleFunc(prefix+"/info", GetInfo).Methods("GET")
 
 	r.HandleFunc(prefix+"/card/{"+cardId+"}", GetCard).Methods("GET")
-	r.HandleFunc(prefix+"/card/{"+cardId+"}", PutCard).Methods("PUT")
+	r.HandleFunc(prefix+"/card/{"+cardId+"}", PutCard).Methods("PUT", "POST")
 
 	r.HandleFunc(prefix+"/robot/{"+robotName+"}", GetRobot).Methods("GET")
-	r.HandleFunc(prefix+"/robot/{"+robotName+"}", PutRobot).Methods("PUT")
+	r.HandleFunc(prefix+"/robot/{"+robotName+"}", PutRobot).Methods("PUT", "POST")
 	r.HandleFunc(prefix+"/robot/{"+robotName+"}", DelRobot).Methods("DELETE")
 
-	r.HandleFunc(prefix+"/robot/{"+robotName+"}/card/{"+cardId+"}", AssociateRobot).Methods("PUT")
+	r.HandleFunc(prefix+"/robot/{"+robotName+"}/card/{"+cardId+"}", AssociateRobot).Methods("PUT", "POST")
 	r.HandleFunc(prefix+"/robot/{"+robotName+"}/card", DissociateRobot).Methods("DELETE")
 
 	r.HandleFunc(prefix+"/robots", GetRobots).Methods("GET")
