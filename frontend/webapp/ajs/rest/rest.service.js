@@ -21,7 +21,7 @@
 
     // --------------------------
 
-    function RestService( $resource, $base64, baseUrl ){
+    function RestService( $resource, baseUrl ){
 
         return $resource( '', {}, {
 
@@ -142,7 +142,7 @@
              * Returns the status of a robot.
              * @returns {httpPromise} resolves, or fails with error description.
              */
-            robotStatus: {method: 'GET', url: baseUrl + 'robot/:url', params: {url: '@url'}},
+            robotStatus: {method: 'GET', url: baseUrl + 'robot/:name', params: {name: '@name'}},
 
             /**
              * @ngdoc
@@ -150,10 +150,10 @@
              * @methodOf thymioCaptain.rest.RestService
              *
              * @description
-             * Add or update a robot. Payload: {"name": "<robot name>"}
+             * Add or update a robot. Payload: {"url": "<robot url>"}
              * @returns {httpPromise} resolves, or fails with error description.
              */
-            addRobot: {method: 'PUT', url: baseUrl + 'robot/:url', params: {url: '@url'}},
+            addRobot: {method: 'PUT', url: baseUrl + 'robot/:name', params: {name: '@name'}},
 
             /**
              * @ngdoc
@@ -164,7 +164,7 @@
              * Delete the robot
              * @returns {httpPromise} resolves, or fails with error description.
              */
-            deleteRobot: {method: 'DEL', url: baseUrl + 'robot/:url', params: {url: '@url'}},
+            deleteRobot: {method: 'DEL', url: baseUrl + 'robot/:name', params: {name: '@name'}},
 
 
             /**

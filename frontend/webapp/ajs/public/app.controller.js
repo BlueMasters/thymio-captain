@@ -30,6 +30,8 @@
 
         $rootScope.program = [];  // the program (set in the init())
 
+        self.progState = 0;  // zero if in sync with the saved program
+
         self.cardIdParam = {cardId: "jacques"}; //TODO
 
         _init();
@@ -52,13 +54,24 @@
 
         //##------------init
 
+
+
         function _init(){
             self.cardIdParam = {cardId: "jacques"};
             RestService.getCardData( self.cardIdParam, function( data ){
                 $rootScope.program = Action.fromJson( data.program );
-                History.watch( 'program' );
+                _initHistory();
                 console.log( "Initialisation done: ", data );
             }, _log );
+        }
+
+        function _initHistory(){
+            // progState == 0 only if the displayed program matches
+            // the one saved in the cloud.
+            var h = History.watch( 'program' );
+            h.addChangeHandler('ch', function() { self.progState++; });
+            h.addUndoHandler('uh', function() { self.progState--; });
+            h.addRedoHandler('rh', function() { self.progState++; });
         }
 
         //##------------ drag and drop
@@ -98,8 +111,10 @@
             angular.forEach( $rootScope.program, function( action ){
                 prog.push( action.toJson() );
             } );
+
             RestService.setCardData( self.cardIdParam, {program: prog}, function(){
                 showToast( 'Prgramme sauvé!' );
+                self.progState = 0;
             }, function(){
                 showToast( 'ERREUR: le programme n\'a pu être sauvé' );
             } );  // TODO errors
