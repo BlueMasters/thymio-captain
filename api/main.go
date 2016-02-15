@@ -39,19 +39,19 @@ const (
 )
 
 type Info struct {
-	CardId  string
-	IsAdmin bool
+	CardId  string `json:"card-id" bson:"cars-id"`
+	IsAdmin bool   `json:"is-admin" bson:"is-admin"`
 }
 
 type Robot struct {
-	Name   string `json:"name"`
-	URL    string `json:"url"`
-	CardId string `json:"card-id"`
+	Name   string `json:"name" bson:"name"`
+	URL    string `json:"url" bson:"url"`
+	CardId string `json:"card-id" bson:"cars-id"`
 }
 
 type Card struct {
-	CardId  string `json:"card-id"`
-	Program []byte `json:"program"`
+	CardId  string `json:"card-id" bson:"card-id"`
+	Program []byte `json:"program" bson:"program"`
 }
 
 type JsonError struct {
@@ -86,7 +86,7 @@ func GetCard(w http.ResponseWriter, r *http.Request) {
 
 	var card Card
 	log.Debug(bson.M{cardId: vars[cardId]})
-	err = database.C(cardC).Find(bson.M{cardId: vars[cardId]}).One(&card)
+	err = database.C(cardC).Find(bson.M{"card-id": vars[cardId]}).One(&card)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		log.Info(err)
@@ -117,7 +117,7 @@ func PutCard(w http.ResponseWriter, r *http.Request) {
 	card.CardId = vars[cardId]
 	card.Program = payload.Program
 
-	_, err = database.C(cardC).Upsert(bson.M{cardId: vars[cardId]}, card)
+	_, err = database.C(cardC).Upsert(bson.M{"card-id": vars[cardId]}, card)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 500)
@@ -277,7 +277,7 @@ func Run(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var robot Robot
-	err = database.C(robotC).Find(bson.M{cardId: vars[cardId]}).One(&robot)
+	err = database.C(robotC).Find(bson.M{"card-id": vars[cardId]}).One(&robot)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -297,7 +297,7 @@ func Stop(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var robot Robot
-	err = database.C(robotC).Find(bson.M{cardId: vars[cardId]}).One(&robot)
+	err = database.C(robotC).Find(bson.M{"card-id": vars[cardId]}).One(&robot)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -317,7 +317,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var robot Robot
-	err = database.C(robotC).Find(bson.M{cardId: vars[cardId]}).One(&robot)
+	err = database.C(robotC).Find(bson.M{"card-id": vars[cardId]}).One(&robot)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -325,7 +325,7 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var card Card
-	err = database.C(cardC).Find(bson.M{cardId: vars[cardId]}).One(&card)
+	err = database.C(cardC).Find(bson.M{"card-id": vars[cardId]}).One(&card)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
