@@ -16,12 +16,12 @@
     </button>
     <!-- undo -->
     <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
-            ng-click="ctrl.undo()">
+            ng-click="ctrl.undo()" ng-disabled="!ctrl.canUndo()">
         <i class="material-icons">undo</i>
     </button>
     <!-- redo -->
     <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
-            ng-click="ctrl.redo()">
+            ng-click="ctrl.redo()" ng-disabled="!ctrl.canRedo()">
         <i class="material-icons">redo</i>
     </button>
 </div>

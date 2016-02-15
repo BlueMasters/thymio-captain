@@ -7,7 +7,7 @@
  * Use of this source code is governed by an Apache 2 license
  * that can be found in the LICENSE file.
  */
-(function () {
+(function(){
 
     /**
      * @ngdoc service
@@ -16,28 +16,41 @@
      * Service to talk to the backend.
      */
     angular
-        .module('thymioCaptain.rest')
-        .factory('RestService', RestService);
+        .module( 'thymioCaptain.rest' )
+        .factory( 'RestService', RestService );
 
     // --------------------------
 
-    function RestService($resource, baseUrl) {
+    function RestService( $resource, $base64, baseUrl ){
 
-        return $resource('', {}, {
+        return $resource( '', {}, {
 
 
             /**
              * @ngdoc
-             * @name getSession
+             * @name infos
              * @methodOf thymioCaptain.rest.RestService
              *
              * @description
-             * get the status of a session
+             * Returns information based on the cookie.
              *
-             * @returns {httpPromise} resolves with the session, or fails with error description.
+             * @returns {httpPromise} resolves with the object {cardId: "", isadmin: bool}, or fails with error
+             * description.
              */
-            getSession: {method: 'GET', url: baseUrl + 'session/:id', params: {id: '@id'}},
+            infos: {method: 'GET', url: baseUrl + 'info'},
 
+
+            /**
+             * @ngdoc
+             * @name getCardData
+             * @methodOf thymioCaptain.rest.RestService
+             *
+             * @description
+             * Returns the card's data based on this cardId.
+             * @returns {httpPromise} resolves with the object {cardId: "", program: ""}, or fails with error
+             * description.
+             */
+            getCardData: {method: 'GET', url: baseUrl + '/card/:cardId', params: {cardId: '@cardId'}},
 
             /**
              * @ngdoc
@@ -45,21 +58,10 @@
              * @methodOf thymioCaptain.rest.RestService
              *
              * @description
-             * The body of the request is the JSON encoded program.
+             * The body of the request is the object {cardId: "", program: ""}
              * @returns {httpPromise} resolves, or fails with error description.
              */
-            saveProgram: {method: 'PUT', url: baseUrl + ':id/program', params: {id: '@id'}},
-
-            /**
-             * @ngdoc
-             * @name getProgram
-             * @methodOf thymioCaptain.rest.RestService
-             *
-             * @description
-             * The body of the answer is the JSON encoded program.
-             * @returns {httpPromise} resolves with the program, or fails with error description.
-             */
-            getProgram: {method: 'GET', url: baseUrl + ':id/program', params: {id: '@id'}, isArray: true},
+            setCardData: {method: 'PUT', url: baseUrl + '/card/:cardId', params: {cardId: '@cardId'}},
 
 
             /**
@@ -72,7 +74,11 @@
              * This command requires a valid "admin" cookie in the headers's request.
              * @returns {httpPromise} resolves, or fails with error description.
              */
-            associateThymio: {method: 'PUT', url: baseUrl + ':id/robot/:ip', params: {id: '@id', ip: '@ip'}},
+            associateThymio: {
+                method: 'PUT',
+                url   : baseUrl + 'robot/:url/card/:cardId',
+                params: {cardId: '@cardId', ip: '@ip'}
+            },
 
 
             /**
@@ -85,8 +91,11 @@
              * This command requires a valid "admin" cookie in the headers's request.
              * @returns {httpPromise} resolves, or fails with error description.
              */
-            dissociateThymio: {method: 'DEL', url: baseUrl + ':id/robot/:ip', params: {id: '@id', ip: '@ip'}},
-
+            dissociateThymio: {
+                method: 'DEL',
+                url   : baseUrl + 'robot/:url/card/:cardId',
+                params: {cardId: '@cardId', ip: '@ip'}
+            },
 
             /**
              * @ngdoc
@@ -94,46 +103,81 @@
              * @methodOf thymioCaptain.rest.RestService
              *
              * @description
-             * Send the stopcommand to the associated robot. Returns an error if the robot is not associated.
+             * Send the run command to the associated robot. Returns an error if the robot is not associated.
              * @returns {httpPromise} resolves, or fails with error description.
              */
-            run: {method: 'GET', url: baseUrl + 'session/:id/stop', params: {id: '@id'}},
+            run: {method: 'GET', url: baseUrl + 'card/:cardId/run', params: {cardId: '@cardId'}},
 
             /**
              * @ngdoc
-             * @name uploadProgram
+             * @name stop
+             * @methodOf thymioCaptain.rest.RestService
+             *
+             * @description
+             * Send the stop command to the associated robot. Returns an error if the robot is not associated.
+             * @returns {httpPromise} resolves, or fails with error description.
+             */
+            stop: {method: 'GET', url: baseUrl + 'card/:cardId/stop', params: {cardId: '@cardId'}},
+
+            /**
+             * @ngdoc
+             * @name upload
              * @methodOf thymioCaptain.rest.RestService
              *
              * @description
              * Upload the code to the associated robot. Returns an error if the robot is not associated.
              * @returns {httpPromise} resolves, or fails with error description.
              */
-            uploadProgram: {method: 'GET', url: baseUrl + 'session/:id/upload', params: {id: '@id'}},
+            upload: {method: 'GET', url: baseUrl + 'card/:cardId/upload', params: {cardId: '@cardId'}},
 
 
             /* ===================================================================*/
-            /**
-             * @ngdoc
-             * @name isAdmin
-             * @methodOf thymioCaptain.rest.RestService
-             *
-             * @description
-             * Checks if a connection is from an admin
-             * @returns {httpPromise} resolves with a boolean or an error
-             */
-            isAdmin: {method: 'GET', url: baseUrl + 'isadmin'},
 
             /**
              * @ngdoc
-             * @name getAssociations
+             * @name robotStatus
              * @methodOf thymioCaptain.rest.RestService
              *
              * @description
-             * Returns a list of associations (admin only)
-             * @returns {httpPromise} resolves with the list, or fails with error description.
+             * Returns the status of a robot.
+             * @returns {httpPromise} resolves, or fails with error description.
              */
-            getAssociations: {method: 'GET', url: baseUrl + 'associations', params: {id: '@id'}, isArray: true}
-        })
+            robotStatus: {method: 'GET', url: baseUrl + 'robot/:url', params: {url: '@url'}},
+
+            /**
+             * @ngdoc
+             * @name addRobot
+             * @methodOf thymioCaptain.rest.RestService
+             *
+             * @description
+             * Add or update a robot. Payload: {"name": "<robot name>"}
+             * @returns {httpPromise} resolves, or fails with error description.
+             */
+            addRobot: {method: 'PUT', url: baseUrl + 'robot/:url', params: {url: '@url'}},
+
+            /**
+             * @ngdoc
+             * @name robotStatus
+             * @methodOf thymioCaptain.rest.RestService
+             *
+             * @description
+             * Delete the robot
+             * @returns {httpPromise} resolves, or fails with error description.
+             */
+            deleteRobot: {method: 'DEL', url: baseUrl + 'robot/:url', params: {url: '@url'}},
+
+
+            /**
+             * @ngdoc
+             * @name getRobots
+             * @methodOf thymioCaptain.rest.RestService
+             *
+             * @description
+             * Returns the list of all known robots with the associated card (admin only)
+             * @returns {httpPromise} resolves with the list (url,name,cardId), or fails with error description.
+             */
+            getRobots: {method: 'GET', url: baseUrl + 'robots', params: {id: '@id'}, isArray: true}
+        } )
     }
 
 }());

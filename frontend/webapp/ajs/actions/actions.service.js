@@ -22,12 +22,12 @@
 
         Action.actionsList = getAvailActions;
         Action.fromJson = fromJson;
-        Action.prototype.asJson = asJson;
+        Action.prototype.toJson = asRestParam;
 
         // ----------------------------------------------------
 
-        function asJson(){
-            return JSON.stringify( {Action: this.type, Param: this.param} );
+        function asRestParam(){
+            return {Action: this.type, Param: this.param};
         }
 
         function getAvailActions(){

@@ -52,7 +52,7 @@
                     <!--delete icon-->
                     <div class="mdl-card__menu">
                         <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
-                                ng-click="ctrl.remove($root.program, $index); $event.stopPropagation();">
+                                ng-click="$root.program.splice($index,1); $event.stopPropagation();">
                             <i class="material-icons">delete</i>
                         </button>
                     </div>

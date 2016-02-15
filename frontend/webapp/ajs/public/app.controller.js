@@ -25,22 +25,41 @@
     function MainCtrl( $rootScope, RestService, Action, History ){
 
         var self = this;
-        self.actions = Action.actionsList();
-        self.cardId = "card-id"; //TODO
-        $rootScope.program = [];
+
+        self.actions = Action.actionsList();  // default actions available
+
+        $rootScope.program = [];  // the program (set in the init())
+
+        self.cardIdParam = {cardId: "jacques"}; //TODO
+
         _init();
 
-        //##------------ undo redo
-        History.watch( 'program' );
+        //##------------ functions
 
+        self.canUndo = historyCanUndo;
+        self.canRedo = historyCanRedo;
+        self.undo = historyUndo;
+        self.redo = histroyRedo;
 
-        self.undo = function(){
-            History.undo( 'program' );
-        };
+        self.save = saveCardInfos;
+        self.upload = uploadProgram;
+        self.run = runProgram;
+        self.stop = stopProgram;
 
-        self.redo = function(){
-            History.redo( 'program' );
-        };
+        /* *****************************************************************
+         * implementation
+         * ****************************************************************/
+
+        //##------------init
+
+        function _init(){
+            self.cardIdParam = {cardId: "jacques"};
+            RestService.getCardData( self.cardIdParam, function( data ){
+                $rootScope.program = Action.fromJson( data.program );
+                History.watch( 'program' );
+                console.log( "Initialisation done: ", data );
+            }, _log );
+        }
 
         //##------------ drag and drop
 
@@ -54,54 +73,61 @@
             allowDuplicates: true
         };
 
+        //##------------undo/redo
+
+        function historyUndo(){
+            History.undo( 'program' );
+        }
+
+        function histroyRedo(){
+            History.redo( 'program' );
+        }
+
+        function historyCanRedo(){
+            return History.canRedo( 'program' );
+        }
+
+        function historyCanUndo(){
+            return History.canUndo( 'program' );
+        }
+
         //##------------ rest
 
-        self.save = function(){
+        function saveCardInfos(){
             var prog = [];
             angular.forEach( $rootScope.program, function( action ){
                 prog.push( action.toJson() );
             } );
-            RestService.saveProgram( {id: self.cardId}, prog, function(){
-                self.showToast( 'program saved' );
-            }, _log );  // TODO errors
-        };
+            RestService.setCardData( self.cardIdParam, {program: prog}, function(){
+                showToast( 'Prgramme sauvé!' );
+            }, function(){
+                showToast( 'ERREUR: le programme n\'a pu être sauvé' );
+            } );  // TODO errors
+        }
 
-        self.upload = function(){
-            RestService.uploadProgram({id: self.cardId}, _log, _log);
-        };
+        function uploadProgram(){
+            RestService.upload( self.cardIdParam, _log, _log );
+        }
 
-        self.run = function(){
-            RestService.run({id: self.cardId}, _log, _log);
-        };
+        function runProgram(){
+            RestService.run( self.cardIdParam, _log, _log );
+        }
 
-        self.stop = function(){
-            RestService.stop({id: self.cardId}, _log, _log);
-        };
+        function stopProgram(){
+            RestService.stop( self.cardIdParam, _log, _log );
+        }
 
         //##------------ utils
 
-
-        self.remove = function( array, index ){
-            array.splice( index, 1 );
-        };
-
-        self.showToast = function( message ){
+        function showToast( message ){
             $( '.mdl-js-snackbar' )[0].MaterialSnackbar.showSnackbar(
                 {
                     message: message,
                     timeout: 2000
                 }
             );
-        };
-
-        // ----------------------------------------------------
-
-
-        function _init(){
-            RestService.getProgram( {id: self.cardId}, function( data ){
-                $rootScope.program = Action.fromJson( data );
-            }, _log );
         }
+
 
         function _log( o ){
             console.log( o );

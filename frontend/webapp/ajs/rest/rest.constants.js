@@ -10,5 +10,5 @@
 (function(){
     angular
         .module( 'thymioCaptain.rest' )
-        .constant( 'baseUrl', 'http://api.thymio.tk/v1/' );
+        .constant( 'baseUrl', 'https://api.thymio.tk/v1/' );
 }());
