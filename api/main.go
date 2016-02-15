@@ -156,7 +156,7 @@ func AssociateRobot(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, string(errorDesc), 400)
 		return
 	} else if n != 1 {
-		errorDesc, _ := json.Marshal(JsonError{"Card not found"})
+		errorDesc, _ := json.Marshal(JsonError{fmt.Sprintf("Card not found (n=%d)", n)})
 		http.Error(w, string(errorDesc), 400)
 		return
 	}
