@@ -181,7 +181,7 @@ func DissociateRobot(w http.ResponseWriter, r *http.Request) {
 
 	err = database.C(robotC).Update(
 		bson.M{"name": vars[robotName]},
-		bson.M{"$set": bson.M{cardId: ""}})
+		bson.M{"$set": bson.M{"cardId": ""}})
 
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
