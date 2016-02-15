@@ -32,10 +32,10 @@ const (
 	sessionC   = "sessions"
 	sessionKey = "session-key"
 	prefix     = "/v1"
-	cardC      = "card"
-	cardId     = "cardid"
-	robotC     = "robot"
-	robotURL   = "roboturl"
+	cardC      = "cards"
+	cardId     = "CardId"
+	robotC     = "robots"
+	robotName  = "RobotName"
 )
 
 type Info struct {
@@ -44,14 +44,14 @@ type Info struct {
 }
 
 type Robot struct {
-	URL    string
-	Name   string
-	CardId string
+	Name   string `json:"name"`
+	URL    string `json:"url"`
+	CardId string `json:"card-id"`
 }
 
 type Card struct {
-	CardId  string
-	Program []byte
+	CardId  string `json:"card-id"`
+	Program []byte `json:"program"`
 }
 
 type JsonError struct {
@@ -103,7 +103,7 @@ func PutCard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var payload struct {
-		Program []byte `json"program"`
+		Program []byte `json:"program"`
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&payload)
@@ -162,7 +162,7 @@ func AssociateRobot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = database.C(robotC).Update(
-		bson.M{"url": vars[robotURL]},
+		bson.M{"name": vars[robotName]},
 		bson.M{"$set": bson.M{cardId: vars[cardId]}})
 
 	if err != nil {
@@ -180,7 +180,7 @@ func DissociateRobot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = database.C(robotC).Update(
-		bson.M{"url": vars[robotURL]},
+		bson.M{"name": vars[robotName]},
 		bson.M{"$set": bson.M{cardId: ""}})
 
 	if err != nil {
@@ -198,7 +198,7 @@ func GetRobot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var robot Robot
-	err = database.C(robotC).Find(bson.M{"url": vars[robotURL]}).One(&robot)
+	err = database.C(robotC).Find(bson.M{"name": vars[robotName]}).One(&robot)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -214,7 +214,7 @@ func PutRobot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var payload struct {
-		Name string `json"name"`
+		URL string `json:"url"`
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&payload)
@@ -225,11 +225,11 @@ func PutRobot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var robot Robot
-	robot.URL = vars[robotURL]
-	robot.Name = payload.Name
+	robot.Name = vars[robotName]
+	robot.URL = payload.URL
 	robot.CardId = ""
 
-	_, err = database.C(robotC).Upsert(bson.M{"url": vars[robotURL]}, robot)
+	_, err = database.C(robotC).Upsert(bson.M{"name": vars[robotName]}, robot)
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 500)
@@ -244,7 +244,7 @@ func DelRobot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = database.C(robotC).RemoveAll(bson.M{"url": vars[robotURL]})
+	_, err = database.C(robotC).RemoveAll(bson.M{"name": vars[robotName]})
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
@@ -281,10 +281,13 @@ func Run(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
-	} else {
-		log.Infof("Sending run command to robot %v", robot.URL)
-		json.NewEncoder(w).Encode(JsonOK{"Done"})
+		return
 	}
+	log.Infof("Sending run command to robot %v", robot.URL)
+	// var client http.Client
+	// _, err = client.Get(robot.URL+"/run"))
+	json.NewEncoder(w).Encode(JsonOK{"Done"})
+
 }
 
 func Stop(w http.ResponseWriter, r *http.Request) {
@@ -298,10 +301,13 @@ func Stop(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
-	} else {
-		log.Infof("Sending stop command to robot %v", robot.URL)
-		json.NewEncoder(w).Encode(JsonOK{"Done"})
+		return
 	}
+	log.Infof("Sending stop command to robot %v", robot.URL)
+	// var client http.Client
+	// _, err = client.Get(robot.URL+"/stop"))
+	json.NewEncoder(w).Encode(JsonOK{"Done"})
+
 }
 
 func Upload(w http.ResponseWriter, r *http.Request) {
@@ -315,10 +321,20 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
-	} else {
-		log.Infof("Uploading code to robot %v", robot.URL)
-		json.NewEncoder(w).Encode(JsonOK{"Done"})
+		return
 	}
+
+	var card Card
+	err = database.C(cardC).Find(bson.M{cardId: vars[cardId]}).One(&card)
+	if err != nil {
+		errorDesc, _ := json.Marshal(JsonError{err.Error()})
+		http.Error(w, string(errorDesc), 400)
+		return
+	}
+	// var client http.Client
+	// _, err = client.Do(http.NewRequest("PUT", robot.URL+"/upload"), r)
+	json.NewEncoder(w).Encode(JsonOK{"Done"})
+
 }
 
 type CorsServer struct {
@@ -375,12 +391,12 @@ func main() {
 	r.HandleFunc(prefix+"/card/{"+cardId+"}", GetCard).Methods("GET")
 	r.HandleFunc(prefix+"/card/{"+cardId+"}", PutCard).Methods("PUT")
 
-	r.HandleFunc(prefix+"/robot/{"+robotURL+"}", GetRobot).Methods("GET")
-	r.HandleFunc(prefix+"/robot/{"+robotURL+"}", PutRobot).Methods("PUT")
-	r.HandleFunc(prefix+"/robot/{"+robotURL+"}", DelRobot).Methods("DELETE")
+	r.HandleFunc(prefix+"/robot/{"+robotName+"}", GetRobot).Methods("GET")
+	r.HandleFunc(prefix+"/robot/{"+robotName+"}", PutRobot).Methods("PUT")
+	r.HandleFunc(prefix+"/robot/{"+robotName+"}", DelRobot).Methods("DELETE")
 
-	r.HandleFunc(prefix+"/robot/{"+robotURL+"}/card/{"+cardId+"}", AssociateRobot).Methods("PUT")
-	r.HandleFunc(prefix+"/robot/{"+robotURL+"}/card", DissociateRobot).Methods("DELETE")
+	r.HandleFunc(prefix+"/robot/{"+robotName+"}/card/{"+cardId+"}", AssociateRobot).Methods("PUT")
+	r.HandleFunc(prefix+"/robot/{"+robotName+"}/card", DissociateRobot).Methods("DELETE")
 
 	r.HandleFunc(prefix+"/robots", GetRobots).Methods("GET")
 	r.HandleFunc(prefix+"/card/{"+cardId+"}/run", Run).Methods("GET")
