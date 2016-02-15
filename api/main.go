@@ -150,7 +150,7 @@ func AssociateRobot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	n, err := database.C(cardC).Find(bson.M{"card-id": vars[cardId]}).Count()
+	n, err := database.C(cardC).Find(bson.M{"cardId": vars[cardId]}).Count()
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
 		http.Error(w, string(errorDesc), 400)
