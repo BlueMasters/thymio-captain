@@ -1,0 +1,36 @@
+<div class="align-center">
+
+    <div>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio-all"
+               ng-init="robotsFilter=''">
+            <input type="radio" id="radio-all" class="mdl-radio__button" ng-model="robotsFilter" value="" checked>
+            <span class="mdl-radio__label">All</span>
+        </label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio-used">
+            <input type="radio" id="radio-used" class="mdl-radio__button" ng-model="robotsFilter" value="used">
+            <span class="mdl-radio__label">Used only</span>
+        </label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio-free">
+            <input type="radio" id="radio-free" class="mdl-radio__button" ng-model="robotsFilter" value="free">
+            <span class="mdl-radio__label">Free only</span>
+        </label>
+    </div>
+
+    <!--table of associations-->
+    <table class="margin-auto mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+        <thead>
+        <tr>
+            <th class="mdl-data-table__cell--non-numeric">Robot</th>
+            <th class="mdl-data-table__cell--non-numeric">URL</th>
+            <th class="mdl-data-table__cell--non-numeric">CardId</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="r in ctrl.robots | robotsFilter: robotsFilter">
+            <td class="mdl-data-table__cell--non-numeric">{{r.name}}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{r.url}}</td>
+            <td class="mdl-data-table__cell--non-numeric">{{r.cardId}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

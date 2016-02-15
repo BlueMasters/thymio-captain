@@ -11,26 +11,19 @@
 
     /**
      * @ngdoc overview
-     * @name thymioCaptain.app
+     * @name thymioCaptain.admin
      * @description This module is the one responsible for the whole Thymio Captain App.
      * It is mainly composed of controllers.
-     * @requires  thymioCaptain.rest
-     * @requires  thymio.modals
-     * @requires  ngAnimate
-     * @requires  toaster
      *
      * @author Lucy Linder
      * @date     February 2016
      * @context  Thymio Captain
      */
-    angular.module( 'thymioCaptain.app',
+    angular.module( 'thymioCaptain.admin',
         // dependencies
         [
             'thymioCaptain.rest',
-            'thymioCaptain.actions',
-            'ngAnimate',
-            'as.sortable',
-            'decipher.history'
+            'ngAnimate'
         ] );
 
 }());

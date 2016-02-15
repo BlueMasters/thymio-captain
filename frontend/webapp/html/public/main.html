@@ -1,26 +1,56 @@
+<!--buttons at the top-->
 <div class="header" style="padding: 10px; margin-bottom: 10px;">
-    <!-- Colored FAB button -->
-    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored">
+    <!-- save in the cloud -->
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
+            ng-click="ctrl.save()" ng-disabled="ctrl.progState == 0">
         <i class="material-icons">backup</i>
     </button>
-    <!-- Colored FAB button with ripple -->
-    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+    <!-- help -->
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
+            ng-click="ctrl.help()">
         <i class="material-icons">help</i>
     </button>
-    <!-- Colored FAB button with ripple -->
-    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+    <!-- upload -->
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
+            ng-click="ctrl.upload()">
         <i class="material-icons">play_circle_outline</i>
     </button>
-    <!-- Colored FAB button with ripple -->
+    <!-- undo -->
     <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
-            ng-click="ctrl.undo()">
+            ng-click="ctrl.undo()" ng-disabled="!ctrl.canUndo()">
         <i class="material-icons">undo</i>
     </button>
-    <!-- Colored FAB button with ripple -->
+    <!-- redo -->
     <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
-            ng-click="ctrl.redo()">
+            ng-click="ctrl.redo()" ng-disabled="!ctrl.canRedo()">
         <i class="material-icons">redo</i>
     </button>
 </div>
 
+
+<!--main content-->
 <div ng-include src="'html/public/main_content.html'"></div>
+
+<button ng-click="ctrl.dial()">dialog</button>
+
+<!--content of the run dialog-->
+
+<div id="runDialogContent" class="dialog-custom-content">
+    <h4>Ton robot est prêt!</h4>
+    <div class="align-center">
+        <p>Utilise les boutons suivants pour le contrôler:</p>
+
+        <div>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                    ng-click="ctrl.run();">
+                vas-y !
+            </button>
+        </div>
+        <div>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                    ng-click="ctrl.run();">
+                arrête.
+            </button>
+        </div>
+    </div>
+</div>
