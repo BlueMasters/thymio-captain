@@ -242,7 +242,7 @@ func PutRobot(w http.ResponseWriter, r *http.Request) {
 	_, err = database.C(robotC).Upsert(
 		bson.M{"name": vars["robotName"]},
 		bson.M{
-			"url":          robot.URL,
+			"$set":         bson.M{"url": robot.URL},
 			"$setOnInsert": bson.M{"cardId": ""}})
 	if report(w, err) != nil {
 		return
