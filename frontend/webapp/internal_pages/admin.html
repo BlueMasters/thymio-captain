@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ADMIN | ThymioCaptain</title>
+    <script type="text/javascript" src="/vendor/jquery-2.1.4.min.js"></script>
+    <!-- ## ==== MATERIAL DESIGN LITE ==== ## -->
+    <link rel="stylesheet" href="/https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="/vendor/dialog/mdl.dialog.css">
+    <link rel="stylesheet" href="/vendor/mdl/material.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body ng-app="thymioCaptain.admin">
+
+<div class="admin-layout mdl-layout mdl-layout--fixed-header mdl-js-layout mdl-color--grey-100">
+    <header class="admin-header mdl-layout__header mdl-layout__header--scroll mdl-color--grey-100 mdl-color-text--grey-800">
+        <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title">ADMIN | ThymioCaptain</span>
+        </div>
+    </header>
+    <div class="admin-ribbon"></div>
+    <main class="admin-main mdl-layout__content">
+        <div class="admin-container mdl-grid">
+            <div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+            <div  class="admin-content mdl-color--white mdl-shadow--4dp content mdl-color-text--grey-800 mdl-cell mdl-cell--8-col">
+
+                <div ng-controller="MainCtrl as ctrl" class="container" ng-include src="'/html/admin/main.html'"><!--
+                 add fade class to
+enable
+transition effects -->
+                </div>
+          </div>
+        </div>
+    </main>
+
+
+    <!--toast-->
+    <div class="mdl-snackbar mdl-js-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button type="button" class="mdl-snackbar__action"></button>
+    </div>
+
+
+    <!-- ## ==== INCLUDE SCRIPTS ==== ## -->
+    <script type="text/javascript" src="/vendor/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/vendor/angular/angular.min.js"></script>
+    <script type="text/javascript" src="/vendor/angular/angular-resource.min.js"></script>
+    <script type="text/javascript" src="/vendor/angular/angular-animate.min.js"></script>
+    <script type="text/javascript" src="/vendor/angular/angular-base64.min.js"></script>
+
+
+    <!--material-->
+    <script defer src="/vendor/mdl/material.min.js"></script>
+    <script src="/vendor/dialog/mdl.dialog.js"></script>
+
+
+    <!--rest-->
+    <script type="text/javascript" src="/ajs/rest/rest.module.js"></script>
+    <script type="text/javascript" src="/ajs/rest/rest.constants.js"></script>
+    <script type="text/javascript" src="/ajs/rest/rest.service.js"></script>
+
+    <!--app-->
+    <script type="text/javascript" src="/ajs/admin/app.module.js"></script>
+    <script type="text/javascript" src="/ajs/admin/app.controller.js"></script>
+    <script type="text/javascript" src="/ajs/admin/app.filters.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ThymioCaptain</title>
+    <link rel="stylesheet" href="/vendor/angular/ng-sortable.min.css">
+    <script type="text/javascript" src="vendor/jquery-2.1.4.min.js"></script>
+    <!-- ## ==== MATERIAL DESIGN LITE ==== ## -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/vendor/mdl/material.min.css">
+    <link rel="stylesheet" href="/css/public.css">
+    <link rel="stylesheet" href="/vendor/dialog/mdl.dialog.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body ng-app="thymioCaptain.app">
+
+<div ng-controller="MainCtrl as ctrl" class="container" ng-include src="'/html/public/main.html'"><!-- add fade class to
+enable
+transition effects -->
+</div>
+
+
+<!--toast-->
+<div class="mdl-snackbar mdl-js-snackbar">
+    <div class="mdl-snackbar__text"></div>
+    <button type="button" class="mdl-snackbar__action"></button>
+</div>
+
+
+<!-- ## ==== INCLUDE SCRIPTS ==== ## -->
+<script type="text/javascript" src="/vendor/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/vendor/angular/angular.min.js"></script>
+<script type="text/javascript" src="/vendor/angular/angular-base64.min.js"></script>
+<script type="text/javascript" src="/vendor/angular/angular-resource.min.js"></script>
+<script type="text/javascript" src="/vendor/angular/angular-animate.min.js"></script>
+<script type="text/javascript" src="/vendor/angular/angular-route.min.js"></script>
+<script type="text/javascript" src="/vendor/angular/ng-sortable.min.js"></script>
+<script type="text/javascript" src="/vendor/angular/history.js"></script>
+
+<!--material-->
+<script src="/vendor/mdl/material.min.js"></script>
+<script src="/vendor/dialog/mdl.dialog.js"></script>
+
+
+<!--rest-->
+<script type="text/javascript" src="/ajs/rest/rest.module.js"></script>
+<script type="text/javascript" src="/ajs/rest/rest.constants.js"></script>
+<script type="text/javascript" src="/ajs/rest/rest.service.js"></script>
+
+
+<!--actions-->
+<script type="text/javascript" src="/ajs/actions/actions.module.js"></script>
+<script type="text/javascript" src="/ajs/actions/actions.service.js"></script>
+
+<!--app-->
+<script type="text/javascript" src="/ajs/public/app.module.js"></script>
+<script type="text/javascript" src="/ajs/public/app.controller.js"></script>
+</body>
+</html>
