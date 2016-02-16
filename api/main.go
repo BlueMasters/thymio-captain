@@ -71,15 +71,36 @@ var (
 )
 
 func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string, session *sessions.Session, err error) {
+	log.Debugf("request: %v", r.URL.String())
 	database.Session.Refresh()
 	vars = mux.Vars(r)
 	session, err = store.Get(r, sessionKey)
 	if err != nil {
 		log.Error(err.Error())
 		http.Error(w, "session error", 500)
+	} else {
+		log.Debugf("Session name: %v", session.Name())
+		log.Debugf("Session ID: %v", session.ID)
+		admin, ok := session.Values["admin"]
+		if ok {
+			if admin == "1" {
+				log.Debug("admin: yes")
+			} else {
+				log.Debugf("admin: no (%v)", admin)
+			}
+		} else {
+			log.Debug("admin: UNKNOWN")
+		}
+
+		cardId, ok := session.Values["cardId"]
+		if ok {
+			log.Debugf("cardId: %v", cardId)
+		} else {
+			log.Debug("cardId: UNKNOWN")
+		}
+		w.Header().Set("Cache-Control", "max-age=0, no-cache, no-store")
+		w.Header().Set("Pragma", "no-cache")
 	}
-	w.Header().Set("Cache-Control", "max-age=0, no-cache, no-store")
-	w.Header().Set("Pragma", "no-cache")
 	return
 }
 
