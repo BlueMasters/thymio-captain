@@ -406,12 +406,12 @@ func UploadCardRobot(w http.ResponseWriter, r *http.Request) {
 	if report(w, err) != nil {
 		return
 	}
+	cReq.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	res, err := client.Do(cReq)
 	if report(w, err) != nil {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(res.StatusCode)
 	io.Copy(w, res.Body)
 }
