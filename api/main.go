@@ -78,6 +78,8 @@ func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string
 		log.Error(err.Error())
 		http.Error(w, "session error", 500)
 	}
+	w.Header().Set("Cache-Control", "max-age=0, no-cache, no-store")
+	w.Header().Set("Pragma", "no-cache")
 	return
 }
 
