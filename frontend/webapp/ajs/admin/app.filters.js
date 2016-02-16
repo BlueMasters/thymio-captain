@@ -27,7 +27,6 @@
         return function( input, filterType ){
 
             var filtered = [];
-            console.log(filterType);
             if(!filterType) return input;
 
             switch( filterType ){

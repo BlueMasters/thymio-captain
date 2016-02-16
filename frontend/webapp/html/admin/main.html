@@ -1,36 +1,85 @@
+<h4>Current status</h4>
+<hr/>
+
+<table id="infos" class="margin-auto mdl-data-table">
+    <tr>
+        <td class="bold">Card Id</td>
+        <td class="mdl-data-table__cell--non-numeric ttfamily">{{ctrl.cardId ? ctrl.cardId : '-'}}</td>
+    </tr>
+    <tr class="mdl-data-table__cell--non-numeric">
+        <td class="bold">Associated</td>
+        <td class="mdl-data-table__cell--non-numeric">{{ctrl.currentRobotUrl ? 'YES' : 'NO'}}</td>
+    </tr>
+</table>
+
+<h4>Robot's list</h4>
+<hr/>
 <div class="align-center">
 
-    <div>
+    <div class="padded">
         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio-all"
                ng-init="robotsFilter=''">
-            <input type="radio" id="radio-all" class="mdl-radio__button" ng-model="robotsFilter" value="" checked>
+            <input type="radio" id="radio-all" name="robotsFilter" class="mdl-radio__button" ng-model="robotsFilter"
+                   value="" checked>
             <span class="mdl-radio__label">All</span>
         </label>
         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio-used">
-            <input type="radio" id="radio-used" class="mdl-radio__button" ng-model="robotsFilter" value="used">
+            <input type="radio" id="radio-used" name="robotsFilter" class="mdl-radio__button"
+                   ng-model="robotsFilter" value="used">
             <span class="mdl-radio__label">Used only</span>
         </label>
         <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio-free">
-            <input type="radio" id="radio-free" class="mdl-radio__button" ng-model="robotsFilter" value="free">
+            <input type="radio" id="radio-free" name="robotsFilter" class="mdl-radio__button" ng-model="robotsFilter"
+                   value="free">
             <span class="mdl-radio__label">Free only</span>
         </label>
     </div>
 
     <!--table of associations-->
-    <table class="margin-auto mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+    <table class="margin-auto mdl-data-table mdl-js-data-table mdl-shadow--2dp">
         <thead>
         <tr>
             <th class="mdl-data-table__cell--non-numeric">Robot</th>
             <th class="mdl-data-table__cell--non-numeric">URL</th>
             <th class="mdl-data-table__cell--non-numeric">CardId</th>
+            <th class="mdl-data-table__cell--non-numeric"></th>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat="r in ctrl.robots | robotsFilter: robotsFilter">
+        <tr ng-repeat="r in ctrl.robots | robotsFilter: robotsFilter"
+            ng-class="{current: r.url == ctrl.currentRobotUrl}">
             <td class="mdl-data-table__cell--non-numeric">{{r.name}}</td>
-            <td class="mdl-data-table__cell--non-numeric">{{r.url}}</td>
+            <td class="mdl-data-table__cell--non-numeric ttfamily">{{r.url}}</td>
             <td class="mdl-data-table__cell--non-numeric">{{r.cardId}}</td>
+            <td class="mdl-data-table__cell--non-numeric">
+                <!-- associate/dissociate -->
+                <button id="dissBtn" ng-show="r.cardId" title="dissociate the thymio" ng-click="ctrl.dissociate(r)"
+                        class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored"
+                        ng-click="ctrl.ping(r)">
+                    <i class="material-icons">radio_button_checked</i>
+                </button>
+
+                <button id="assBtn" title="associate this thymio with {{self.cardId}}" ng-show="!r.cardId"
+                        ng-click="ctrl.associate(r)"
+                        ng-disabled="!ctrl.cardId || ctrl.currentRobotUrl"
+                        class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored"
+                        ng-click="ctrl.ping(r)">
+                    <i class="material-icons">radio_button_unchecked</i>
+                </button>
+            </td>
+            <td class="mdl-data-table__cell--non-numeric">
+                <!-- ping button -->
+                <button id="pingBtn" title="ping the thymio" class="mdl-button mdl-js-button mdl-button--icon
+                        mdl-button--colored"
+                        ng-click="ctrl.ping(r)">
+                    <i class="material-icons">check_circle</i>
+                </button>
+            </td>
+
+
         </tr>
         </tbody>
     </table>
 </div>
+
+<div ng-init="contentLoaded()"></div>  <!-- temp fix for ng-include -->

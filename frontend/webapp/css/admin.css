@@ -40,3 +40,34 @@
 .admin-layout.is-small-screen .admin-content {
     padding: 40px 28px;
 }
+
+/* *****************************************************************
+ * general
+ * ****************************************************************/
+.bold {
+    font-weight: bold;
+}
+
+.ttfamily {
+    font-family: monospace;
+}
+
+.padded {
+    padding: 10px;
+}
+
+/* *****************************************************************
+ * tables
+ * ****************************************************************/
+
+#infos td:first-child {
+    font-weight: bold;
+}
+
+table tr.current {
+    background-color: rgba(63, 81, 181, 0.3);
+}
+
+table tr.current:hover {
+    background-color: rgba(63, 81, 181, 0.5) !important;
+}
