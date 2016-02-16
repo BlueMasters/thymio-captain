@@ -399,6 +399,7 @@ func UploadCardRobot(w http.ResponseWriter, r *http.Request) {
 	if report(w, err) != nil {
 		return
 	}
+	log.Debugf("Uploading card to %v: %v", u, string(cardJ))
 	cReq, err := http.NewRequest("PUT", u.String(), bytes.NewReader(cardJ))
 	if report(w, err) != nil {
 		return
