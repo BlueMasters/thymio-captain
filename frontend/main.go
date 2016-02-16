@@ -68,7 +68,6 @@ func CardLogin(w http.ResponseWriter, r *http.Request) {
 		sessions.Save(r, w)
 		http.ServeFile(w, r, root+"/login-failed.html")
 	}
-
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) {
