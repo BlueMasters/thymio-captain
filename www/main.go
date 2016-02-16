@@ -79,7 +79,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func Debug(w http.ResponseWriter, r *http.Request) {
-	vars, session, err := initSession(w, r)
+	_, session, err := initSession(w, r)
 	if err != nil {
 		return
 	}
@@ -107,7 +107,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	if session.Values["admin"] == "1" {
 		http.ServeFile(w, r, "html/admin.html")
 	} else {
-		http.ServeFile(w, r, "html/user.html")
+		http.ServeFile(w, r, "html/public.html")
 	}
 }
 
