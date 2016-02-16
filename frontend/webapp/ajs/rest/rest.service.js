@@ -76,8 +76,8 @@
              */
             associateThymio: {
                 method: 'PUT',
-                url   : baseUrl + 'robot/:url/card/:cardId',
-                params: {cardId: '@cardId', ip: '@ip'}
+                url   : baseUrl + 'robot/:name/card/:cardId',
+                params: {cardId: '@cardId', name: '@name'}
             },
 
 
@@ -92,9 +92,9 @@
              * @returns {httpPromise} resolves, or fails with error description.
              */
             dissociateThymio: {
-                method: 'DEL',
-                url   : baseUrl + 'robot/:url/card/:cardId',
-                params: {cardId: '@cardId', ip: '@ip'}
+                method: 'DELETE',
+                url   : baseUrl + 'robot/:name/card/:cardId',
+                params: {cardId: '@cardId', name: '@name'}
             },
 
             /**
@@ -129,6 +129,7 @@
              * @returns {httpPromise} resolves, or fails with error description.
              */
             upload: {method: 'GET', url: baseUrl + 'card/:cardId/upload', params: {cardId: '@cardId'}},
+
 
 
             /* ===================================================================*/
@@ -176,7 +177,18 @@
              * Returns the list of all known robots with the associated card (admin only)
              * @returns {httpPromise} resolves with the list (url,name,cardId), or fails with error description.
              */
-            getRobots: {method: 'GET', url: baseUrl + 'robots', isArray: true}
+            getRobots: {method: 'GET', url: baseUrl + 'robots', isArray: true},
+
+            /**
+             * @ngdoc
+             * @name pingRobot
+             * @methodOf thymioCaptain.rest.RestService
+             *
+             * @description
+             * check if the robot is connected.
+             * @returns {httpPromise} resolves, or fails with error description.
+             */
+            pingRobot: {method: 'GET', url: baseUrl + 'robot/:name/ping', params: {name: '@name'}}
         } )
     }
 

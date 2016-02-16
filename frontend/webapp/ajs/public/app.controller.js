@@ -32,7 +32,10 @@
 
         self.progState = 0;  // zero if in sync with the saved program
 
-        self.cardIdParam = {cardId: "jacques"}; //TODO
+
+        _getCardId();    //TODO
+
+        self.cardIdParam = {cardId: self.cardId}; //TODO
 
         _init();
 
@@ -185,6 +188,15 @@
 
         function _log( o ){
             console.log( o );
+        }
+
+        function _getCardId(){
+            var m  = window.location.pathname.match('.*start/([^/#\?]*).*');
+            if(m && m.length > 1){
+                self.cardId = m[1];
+            }else{
+                $('body').html("ERREUR: pas de cardId. ACCES INTERDIT");
+            }
         }
 
     }
