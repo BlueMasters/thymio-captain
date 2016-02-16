@@ -166,12 +166,13 @@ func AssociateRobot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// remove the card from all robots (to prevent duplicate)
-	_, err = database.C(robotC).UpdateAll(
-		bson.M{"cardId": vars["cardId"]},
-		bson.M{"$set": bson.M{"cardId": ""}})
+	// check if there is already an association
+	n, err = database.C(robotC).Find(bson.M{"cardId": vars["cardId"]}).Count()
 	report(w, err)
 	if err != nil {
+		return
+	} else if n > 0 {
+		report(w, errors.New("Robot already associated"))
 		return
 	}
 
@@ -391,7 +392,7 @@ func UploadCardRobot(w http.ResponseWriter, r *http.Request) {
 	}
 
 	u, _ := url.Parse(robot.URL)
-	u.Path = filepath.Join(u.Path, "/stop")
+	u.Path = filepath.Join(u.Path, "/upload")
 	var client http.Client
 
 	cardJ, err := json.Marshal(card)
