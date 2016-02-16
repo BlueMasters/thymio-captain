@@ -26,6 +26,7 @@ import (
 	"github.com/kidstuff/mongostore"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"io"
 	"net/http"
 	"net/url"
 	"path/filepath"
@@ -165,6 +166,16 @@ func AssociateRobot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// remove the card from all robots (to prevent duplicate)
+	_, err = database.C(robotC).UpdateAll(
+		bson.M{"cardId": vars["cardId"]},
+		bson.M{"$set": bson.M{"cardId": ""}})
+	report(w, err)
+	if err != nil {
+		return
+	}
+
+	// associate the robot with the card
 	err = database.C(robotC).Update(
 		bson.M{"name": vars["robotName"]},
 		bson.M{"$set": bson.M{"cardId": vars["cardId"]}})
@@ -228,7 +239,11 @@ func PutRobot(w http.ResponseWriter, r *http.Request) {
 	robot.URL = payload.URL
 	robot.CardId = ""
 
-	_, err = database.C(robotC).Upsert(bson.M{"name": vars["robotName"]}, robot)
+	_, err = database.C(robotC).Upsert(
+		bson.M{"name": vars["robotName"]},
+		bson.M{
+			"url":          robot.URL,
+			"$setOnInsert": bson.M{"cardId": ""}})
 	if report(w, err) != nil {
 		return
 	}
@@ -283,7 +298,8 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 	if report(w, err) != nil {
 		return
 	}
-	res.Write(w)
+	w.WriteHeader(res.StatusCode)
+	io.Copy(w, res.Body)
 }
 
 func Run(w http.ResponseWriter, r *http.Request) {
@@ -305,7 +321,8 @@ func Run(w http.ResponseWriter, r *http.Request) {
 	if report(w, err) != nil {
 		return
 	}
-	res.Write(w)
+	w.WriteHeader(res.StatusCode)
+	io.Copy(w, res.Body)
 }
 
 func Stop(w http.ResponseWriter, r *http.Request) {
@@ -327,8 +344,8 @@ func Stop(w http.ResponseWriter, r *http.Request) {
 	if report(w, err) != nil {
 		return
 	}
-	res.Write(w)
-
+	w.WriteHeader(res.StatusCode)
+	io.Copy(w, res.Body)
 }
 
 func Upload(w http.ResponseWriter, r *http.Request) {
@@ -366,7 +383,8 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res.Write(w)
+	w.WriteHeader(res.StatusCode)
+	io.Copy(w, res.Body)
 }
 
 type CorsServer struct {
