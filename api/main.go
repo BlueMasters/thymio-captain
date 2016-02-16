@@ -278,7 +278,31 @@ func GetRobots(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(robots)
 }
 
-func Ping(w http.ResponseWriter, r *http.Request) {
+func PingRobot(w http.ResponseWriter, r *http.Request) {
+	vars, _, err := initSession(w, r)
+	if report(w, err) != nil {
+		return
+	}
+
+	var robot Robot
+	err = database.C(robotC).Find(bson.M{"name": vars["robotName"]}).One(&robot)
+	if report(w, err) != nil {
+		return
+	}
+	u, _ := url.Parse(robot.URL)
+	u.Path = filepath.Join(u.Path, "/ping")
+
+	log.Infof("Sending ping command to robot: %v", u)
+	var client http.Client
+	res, err := client.Get(u.String())
+	if report(w, err) != nil {
+		return
+	}
+	w.WriteHeader(res.StatusCode)
+	io.Copy(w, res.Body)
+}
+
+func PingCardRobot(w http.ResponseWriter, r *http.Request) {
 	vars, _, err := initSession(w, r)
 	if report(w, err) != nil {
 		return
@@ -302,7 +326,7 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, res.Body)
 }
 
-func Run(w http.ResponseWriter, r *http.Request) {
+func RunCardRobot(w http.ResponseWriter, r *http.Request) {
 	vars, _, err := initSession(w, r)
 	if report(w, err) != nil {
 		return
@@ -325,7 +349,7 @@ func Run(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, res.Body)
 }
 
-func Stop(w http.ResponseWriter, r *http.Request) {
+func StopCardRobot(w http.ResponseWriter, r *http.Request) {
 	vars, _, err := initSession(w, r)
 	if report(w, err) != nil {
 		return
@@ -348,7 +372,7 @@ func Stop(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, res.Body)
 }
 
-func Upload(w http.ResponseWriter, r *http.Request) {
+func UploadCardRobot(w http.ResponseWriter, r *http.Request) {
 	vars, _, err := initSession(w, r)
 	if report(w, err) != nil {
 		return
@@ -446,15 +470,16 @@ func main() {
 	r.HandleFunc(prefix+"/robot/{robotName}", GetRobot).Methods("GET")
 	r.HandleFunc(prefix+"/robot/{robotName}", PutRobot).Methods("PUT", "POST")
 	r.HandleFunc(prefix+"/robot/{robotName}", DelRobot).Methods("DELETE")
+	r.HandleFunc(prefix+"/robot/{robotName}/ping", PingRobot).Methods("GET")
 
 	r.HandleFunc(prefix+"/robot/{robotName}/card/{cardId}", AssociateRobot).Methods("PUT", "POST")
 	r.HandleFunc(prefix+"/robot/{robotName}/card", DissociateRobot).Methods("DELETE")
 
 	r.HandleFunc(prefix+"/robots", GetRobots).Methods("GET")
-	r.HandleFunc(prefix+"/card/{cardId}/ping", Ping).Methods("GET")
-	r.HandleFunc(prefix+"/card/{cardId}/run", Run).Methods("GET")
-	r.HandleFunc(prefix+"/card/{cardId}/stop", Stop).Methods("GET")
-	r.HandleFunc(prefix+"/card/{cardId}/upload", Upload).Methods("GET")
+	r.HandleFunc(prefix+"/card/{cardId}/ping", PingCardRobot).Methods("GET")
+	r.HandleFunc(prefix+"/card/{cardId}/run", RunCardRobot).Methods("GET")
+	r.HandleFunc(prefix+"/card/{cardId}/stop", StopCardRobot).Methods("GET")
+	r.HandleFunc(prefix+"/card/{cardId}/upload", UploadCardRobot).Methods("GET", "PUT", "POST")
 
 	http.Handle("/", &CorsServer{r})
 
