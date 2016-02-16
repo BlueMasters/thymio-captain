@@ -274,9 +274,10 @@ func Ping(w http.ResponseWriter, r *http.Request) {
 	if report(w, err) != nil {
 		return
 	}
-	log.Infof("Sending ping command to robot %v", robot.URL)
 	u, _ := url.Parse(robot.URL)
 	u.Path = filepath.Join(u.Path, "/ping")
+
+	log.Infof("Sending ping command to robot: %v", u)
 	var client http.Client
 	res, err := client.Get(u.String())
 	if report(w, err) != nil {
