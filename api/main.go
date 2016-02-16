@@ -292,7 +292,6 @@ func PingRobot(w http.ResponseWriter, r *http.Request) {
 	}
 	u, _ := url.Parse(robot.URL)
 	u.Path = filepath.Join(u.Path, "/ping")
-
 	log.Infof("Sending ping command to robot: %v", u)
 	var client http.Client
 	res, err := client.Get(u.String())
@@ -314,9 +313,9 @@ func PingCardRobot(w http.ResponseWriter, r *http.Request) {
 	if report(w, err) != nil {
 		return
 	}
+	log.Infof("Received ping command from card: %v", vars["cardId"])
 	u, _ := url.Parse(robot.URL)
 	u.Path = filepath.Join(u.Path, "/ping")
-
 	log.Infof("Sending ping command to robot: %v", u)
 	var client http.Client
 	res, err := client.Get(u.String())
@@ -338,9 +337,10 @@ func RunCardRobot(w http.ResponseWriter, r *http.Request) {
 	if report(w, err) != nil {
 		return
 	}
-	log.Infof("Sending run command to robot %v", robot.URL)
+	log.Infof("Received run command from card: %v", vars["cardId"])
 	u, _ := url.Parse(robot.URL)
 	u.Path = filepath.Join(u.Path, "/run")
+	log.Infof("Sending run command to robot: %v", u)
 	var client http.Client
 	res, err := client.Get(u.String())
 	if report(w, err) != nil {
@@ -361,9 +361,10 @@ func StopCardRobot(w http.ResponseWriter, r *http.Request) {
 	if report(w, err) != nil {
 		return
 	}
-	log.Infof("Sending stop command to robot %v", robot.URL)
+	log.Infof("Received stop command from card: %v", vars["cardId"])
 	u, _ := url.Parse(robot.URL)
 	u.Path = filepath.Join(u.Path, "/stop")
+	log.Debugf("Sending stop command to robot: %v", u)
 	var client http.Client
 	res, err := client.Get(u.String())
 	if report(w, err) != nil {
@@ -391,6 +392,7 @@ func UploadCardRobot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Infof("Received upload command from card: %v", vars["cardId"])
 	u, _ := url.Parse(robot.URL)
 	u.Path = filepath.Join(u.Path, "/upload")
 	var client http.Client
@@ -409,6 +411,7 @@ func UploadCardRobot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(res.StatusCode)
 	io.Copy(w, res.Body)
 }
