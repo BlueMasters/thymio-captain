@@ -76,6 +76,7 @@ func sessionValues(r *http.Request) (values map[interface{}]interface{}, err err
 	// check authorization header
 	auth := r.Header.Get("Authorization")
 	if strings.HasPrefix(auth, "Cookie") {
+		log.Debugf("Authorization header: %v", auth)
 		t := strings.Split(auth, " ")
 		if len(t) <= 1 {
 			err = errors.New("Invalid Authorization header")
@@ -83,6 +84,7 @@ func sessionValues(r *http.Request) (values map[interface{}]interface{}, err err
 		var sessionID string
 		if err == nil {
 			err = securecookie.DecodeMulti(sessionKey, t[len(t)-1], &sessionID, store.Codecs...)
+			log.Debugf("Session ID: %v", sessionID)
 		}
 		if err == nil {
 			if !bson.IsObjectIdHex(sessionID) {
@@ -99,6 +101,7 @@ func sessionValues(r *http.Request) (values map[interface{}]interface{}, err err
 	} else {
 		session, err := store.Get(r, sessionKey)
 		if err == nil {
+			log.Debugf("Cookie found. ID: %v", session.ID)
 			values = session.Values
 		}
 	}
