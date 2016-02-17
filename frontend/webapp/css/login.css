@@ -7,6 +7,6 @@ html, body {
     padding-left: 40px;
 }
 
-.thymio-captain-title-small {
+h1.mdl-layout--small-screen-only {
     font-size: 30px;
 }
