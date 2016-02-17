@@ -22,7 +22,7 @@ import (
 	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
+	"github.com/gorilla/securecookie"
 	"github.com/kidstuff/mongostore"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -30,6 +30,7 @@ import (
 	"net/http"
 	"net/url"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -70,37 +71,70 @@ var (
 	store    *mongostore.MongoStore
 )
 
-func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string, session *sessions.Session, err error) {
+func sessionValues(r *http.Request) (values map[interface{}]interface{}, err error) {
+	err = nil
+	// check authorization header
+	auth := r.Header.Get("Authorization")
+	if strings.HasPrefix(auth, "Cookie") {
+		t := strings.Split(auth, " ")
+		if len(t) <= 1 {
+			err = errors.New("Invalid Authorization header")
+		}
+		var sessionID string
+		if err == nil {
+			err = securecookie.DecodeMulti(sessionKey, t[len(t)-1], &sessionID, store.Codecs...)
+		}
+		if err == nil {
+			if !bson.IsObjectIdHex(sessionID) {
+				err = errors.New("Invalid session ID")
+			}
+		}
+		var s mongostore.Session
+		if err == nil {
+			err = database.C(sessionC).FindId(bson.ObjectIdHex(sessionID)).One(&s)
+		}
+		if err == nil {
+			err = securecookie.DecodeMulti(sessionKey, s.Data, &values, store.Codecs...)
+		}
+	} else {
+		session, err := store.Get(r, sessionKey)
+		if err == nil {
+			values = session.Values
+		}
+	}
+	if err != nil {
+		log.Error(err.Error())
+	}
+	return
+}
+
+func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string, values map[interface{}]interface{}, err error) {
 	log.Debugf("request: %v", r.URL.String())
 	database.Session.Refresh()
 	vars = mux.Vars(r)
-	session, err = store.Get(r, sessionKey)
-	if err != nil {
-		log.Error(err.Error())
-		http.Error(w, "session error", 500)
-	} else {
-		log.Debugf("Session name: %v", session.Name())
-		log.Debugf("Session ID: %v", session.ID)
-		admin, ok := session.Values["admin"]
-		if ok {
-			if admin == "1" {
-				log.Debug("admin: yes")
-			} else {
-				log.Debugf("admin: no (%v)", admin)
-			}
-		} else {
-			log.Debug("admin: UNKNOWN")
-		}
 
-		cardId, ok := session.Values["cardId"]
-		if ok {
-			log.Debugf("cardId: %v", cardId)
+	values, err = sessionValues(r)
+
+	admin, ok := values["admin"]
+	if ok {
+		if admin == "1" {
+			log.Debug("admin: yes")
 		} else {
-			log.Debug("cardId: UNKNOWN")
+			log.Debugf("admin: no (%v)", admin)
 		}
-		w.Header().Set("Cache-Control", "max-age=0, no-cache, no-store")
-		w.Header().Set("Pragma", "no-cache")
+	} else {
+		log.Debug("admin: UNKNOWN")
 	}
+
+	cardId, ok := values["cardId"]
+	if ok {
+		log.Debugf("cardId: %v", cardId)
+	} else {
+		log.Debug("cardId: UNKNOWN")
+	}
+	w.Header().Set("Cache-Control", "max-age=0, no-cache, no-store")
+	w.Header().Set("Pragma", "no-cache")
+
 	return
 }
 
@@ -158,17 +192,17 @@ func PutCard(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetInfo(w http.ResponseWriter, r *http.Request) {
-	_, session, err := initSession(w, r)
+	_, values, err := initSession(w, r)
 	if report(w, err) != nil {
 		return
 	}
 
 	var info Info
-	if cardId, ok := session.Values["cardId"]; ok {
+	if cardId, ok := values["cardId"]; ok {
 		info.CardId = cardId.(string)
 	}
 
-	if admin, ok := session.Values["admin"]; ok {
+	if admin, ok := values["admin"]; ok {
 		info.IsAdmin = admin == "1"
 	}
 
