@@ -6,16 +6,14 @@
          data-as-sortable="ctrl.actionsDdConfig"
          data-ng-model="ctrl.actions">
         <!--as-sortable-->
-        <div data-ng-repeat="i in ctrl.actions" data-as-sortable-item style="display:inline-block">
+        <div data-ng-repeat="i in ctrl.actions" data-as-sortable-item
+             class="action_card mdl-shadow--6dp" style="border: 1px solid {{i.color()}};">
             <!-- card -->
-            <div data-as-sortable-item-handle class="demo-card-image mdl-card mdl-shadow--2dp">
-                <!--img-->
-                <div class="mdl-card__title mdl-card--expand align-center" style="background-color: transparent;">
+            <div data-as-sortable-item-handle class="align-center action_card-img">
                     <img src="/img/thymio/{{i.type}}.png" style="max-width: 100px; width:100%">
-                </div>
                 <!--title-->
-                <div class="mdl-card__actions align-center" style="background-color: {{i.color()}}">{{i.title()}}</div>
             </div>
+            <div class="align-center action_card-title" style="background-color: {{i.color()}}">{{i.title()}}</div>
             <!--end card-->
         </div>
         <!--end as-sortable-->

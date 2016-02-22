@@ -77,6 +77,23 @@ select.ng-invalid:focus {
     text-align: center;
 }
 
+/*action card*/
+
+.action_card {
+    display:inline-block;
+    margin: 10px;
+}
+
+.action_card .action_card-img {
+    padding: 20px;
+}
+
+.action_card .action_card-title {
+    padding: 10px;
+    font-weight:bold;
+    color: white;
+    font-size: 1.2em;
+}
 /* ==========  dragged ========== */
 
 .as-sortable-dragging {
@@ -90,10 +107,6 @@ select.ng-invalid:focus {
 
 /* ==========  grid-left ========== */
 
-.grid-left .as-sortable-item {
-    max-width: 30%;
-    margin: 3px;
-}
 
 .grid-left .mdl-card {
     width: 100%;
@@ -113,7 +126,7 @@ select.ng-invalid:focus {
 /* ==========  grid-right ========== */
 
 .grid-right {
-    overflow: auto;
+    overflow-y: scroll;
     position: absolute;
     top: 10px;
     bottom: 10px;
@@ -136,7 +149,7 @@ select.ng-invalid:focus {
     height: 100%;
     width: 90%;
     border: 1px solid #ddd;
-    padding-bottom: 200px;
+    padding-bottom: 20px;
     position: absolute;
     overflow: auto;
 }
