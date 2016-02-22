@@ -11,16 +11,21 @@
 
     /**
      * @ngdoc overview
-     * @name thymio.rest
-     * @requires $rootScope
-     * @requires $httpProvider
+     * @name thymioCaptain.rest
      * @requires $resource
      * @description
      * This module handles the interaction with the server and the app front end.
      */
     angular
-        .module( 'thymioCaptain.rest', ['ngResource', 'base64'] )
-        .config( function( $httpProvider, $base64 ){
+        .module( 'thymioCaptain.rest', ['ngResource', 'base64', 'ngCookies'] )
+        .config( function( $httpProvider, $base64, $cookies ){
+
+            // handle authentication cookie
+            var auth = $cookies.get("session-key");
+
+            if(auth){
+                $httpProvider.defaults.header['Authorization'] = "Cookie " + auth;
+            }
 
             // handle the from/to base64 (program argument only)
             $httpProvider.defaults.transformRequest.unshift( function( data, headerGetter ){
