@@ -18,6 +18,10 @@
             this.title = function(){
                 return ACTIONS[this.type].title;
             };
+
+            this.color = function(){
+                return ACTIONS[this.type].color;
+            }
         }
 
         Action.actionsList = getAvailActions;
@@ -62,6 +66,7 @@
 
     ACTIONS["MoveForward"] = {
         title: "avancer",
+        color: "#FFC000", // yellow
         args : [{
             id   : "10cm",
             descr: "de 10 cm"
@@ -85,11 +90,13 @@
 
     ACTIONS["MoveBackward"] = {
         title: "reculer",
+        color: "#70AD47", // green
         args : ACTIONS["MoveForward"].args
     };
 
     ACTIONS["Turn"] = {
         title: "tourner",
+        color: "#E76D19", // orange
         args : [{
             id   : "Right45",
             descr: "de 45° sur la droite"
@@ -116,6 +123,7 @@
 
     ACTIONS["FollowLine"] = {
         title: "suivre la ligne",
+        color: "#41719C", // blue
         args : [{
             id   : "10cm",
             descr: "sur 10 cm"
@@ -132,7 +140,8 @@
     };
 
     ACTIONS["SetTopColor"] = {
-        title: "couleur du dessus",
+        title: "couleur haut",
+        color: "#AA00FF", // violet
         args : [{
             id   : "off",
             descr: "éteindre"
@@ -158,7 +167,8 @@
     };
 
     ACTIONS["SetBottomColor"] = {
-        title: "couleur du dessous",
+        title: "couleur bas",
+        color: "#FF4081", // pink
         args : ACTIONS["SetTopColor"].args
     };
 
