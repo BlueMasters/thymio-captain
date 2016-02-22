@@ -163,7 +163,8 @@ func checkAdmin(w http.ResponseWriter, session map[interface{}]interface{}) erro
 		return nil
 	} else {
 		err := errors.New("Not authorized")
-		http.Error(w, err.Error(), 401)
+		errorDesc, _ := json.Marshal(JsonError{err.Error()})
+		http.Error(w, string(errorDesc), 401)
 		return err
 	}
 }
