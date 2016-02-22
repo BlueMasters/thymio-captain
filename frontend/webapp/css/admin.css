@@ -59,6 +59,14 @@
 /* *****************************************************************
  * tables
  * ****************************************************************/
+.mdl-data-table {
+    white-space: normal !important;
+    font-size: 1em !important;
+}
+
+.url-col {
+    word-break: break-all;
+}
 
 #infos td:first-child {
     font-weight: bold;

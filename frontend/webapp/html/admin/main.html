@@ -49,7 +49,7 @@
         <tr ng-repeat="r in ctrl.robots | robotsFilter: robotsFilter"
             ng-class="{current: r.url == ctrl.currentRobotUrl}">
             <td class="mdl-data-table__cell--non-numeric">{{r.name}}</td>
-            <td class="mdl-data-table__cell--non-numeric ttfamily">{{r.url}}</td>
+            <td class="mdl-data-table__cell--non-numeric ttfamily url-col">{{r.url}}</td>
             <td class="mdl-data-table__cell--non-numeric">{{r.cardId}}</td>
             <td class="mdl-data-table__cell--non-numeric">
                 <!-- associate/dissociate -->
