@@ -2,7 +2,7 @@
 
 <div class="mdl-grid">
     <!-- left column -->
-    <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet grid-left"
+    <div class="mdl-cell mdl-cell--5-col mdl-cell--4-col-tablet grid-left align-center"
          data-as-sortable="ctrl.actionsDdConfig"
          data-ng-model="ctrl.actions">
         <!--as-sortable-->
@@ -10,7 +10,7 @@
              class="action_card mdl-shadow--6dp" style="border: 1px solid {{i.color()}};">
             <!-- card -->
             <div data-as-sortable-item-handle class="align-center action_card-img">
-                    <img src="/img/thymio/{{i.type}}.png" style="max-width: 100px; width:100%">
+                <img src="/img/thymio/{{i.type}}.png">
                 <!--title-->
             </div>
             <div class="align-center action_card-title" style="background-color: {{i.color()}}">{{i.title()}}</div>
@@ -22,40 +22,36 @@
 
 
     <!-- right column -->
-    <div class="mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet grid-right">
-        <h2 class="align-center">Ton programme</h2>
+    <div class="mdl-cell mdl-cell--7-col mdl-cell--4-col-tablet grid-right">
+        <h2>Ton programme</h2>
         <!--drop container-->
-        <div id="drop" class="mdl-shadow--6dp" data-as-sortable="ctrl.programDdConfig"
+        <div id="drop" data-as-sortable="ctrl.programDdConfig"
              data-ng-model="$root.program">
             <!--as sortable item-->
-            <div data-ng-repeat="i in $root.program" data-as-sortable-item class="grid-right-sortable">
-                <!-- card -->
-                <div class="mdl-card">
-                    <!--title-->
-                    <div class="mdl-card__title" data-as-sortable-item-handle>
-                        {{i.title()}}
-                    </div>
-                    <!--select-->
-                    <div class="mdl-card__supporting-text">
-                        <div class="mdl-selectfield">
-                            <select ng-model="i.param" required>
-                                <option style="color:red" value="" selected disabled hidden>configurer...</option>
-                                <option ng-repeat="option in i.args()"
-                                        value="{{option.id}}">{{option.descr}}
-                                </option>
-                            </select>
-
-                        </div>
-                    </div>
-                    <!--delete icon-->
-                    <div class="mdl-card__menu">
-                        <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
-                                ng-click="$root.program.splice($index,1); $event.stopPropagation();">
-                            <i class="material-icons">delete</i>
-                        </button>
+            <div data-ng-repeat="i in $root.program" data-as-sortable-item class="prog_card mdl-shadow--6dp"
+                 style="border: 4px solid {{i.color()}}"
+                 ng-class="{invalid: !i.param}">
+                <div class="prog_card-img" data-as-sortable-item-handle>
+                    <img src="/img/thymio/{{i.type}}.png">
+                </div>
+                <!--select-->
+                <div class="prog_card-args">
+                    <div class="mdl-selectfield">
+                        <select ng-model="i.param" required>
+                            <option style="color:gray" value="" selected disabled hidden>configurer...</option>
+                            <option ng-repeat="option in i.args()"
+                                    value="{{option.id}}">{{option.descr}}
+                            </option>
+                        </select>
                     </div>
                 </div>
-                <!--end card-->
+                <!--delete icon-->
+                <div class="prog_card-icons">
+                    <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
+                            ng-click="$root.program.splice($index,1); $event.stopPropagation();">
+                        <i class="material-icons">delete</i>
+                    </button>
+                </div>
             </div>
             <!--end sortable item-->
         </div>

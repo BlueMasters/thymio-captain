@@ -1,7 +1,8 @@
 /* Style Select Field */
 
 body {
-    overflow: hidden;
+    /*overflow: hidden;*/
+    margin: 10px;
 }
 
 select {
@@ -54,23 +55,10 @@ select:focus {
     pointer-events: none;
 }
 
-/*ng invalid*/
-
-select.ng-invalid {
-    border-color: red;
-    color: red;
-}
-
-select.ng-invalid:focus {
-    border-color: red;
-    color: inherit;
-}
-
 /* ==========  public CSS ========== */
 
-.mdl-card {
-    margin: 10px;
-    min-height: 0px;
+.md-cell {
+    margin: 0 !important;
 }
 
 .align-center {
@@ -80,20 +68,27 @@ select.ng-invalid:focus {
 /*action card*/
 
 .action_card {
-    display:inline-block;
-    margin: 10px;
+    display: inline-block;
+    margin: 1%;
+    max-width: 27%;
 }
 
 .action_card .action_card-img {
     padding: 20px;
 }
 
+.action_card .action_card-img img {
+    max-width: 130px;
+    width: 100%;
+}
+
 .action_card .action_card-title {
     padding: 10px;
-    font-weight:bold;
+    font-weight: bold;
     color: white;
     font-size: 1.2em;
 }
+
 /* ==========  dragged ========== */
 
 .as-sortable-dragging {
@@ -106,7 +101,6 @@ select.ng-invalid:focus {
 }
 
 /* ==========  grid-left ========== */
-
 
 .grid-left .mdl-card {
     width: 100%;
@@ -126,32 +120,50 @@ select.ng-invalid:focus {
 /* ==========  grid-right ========== */
 
 .grid-right {
-    overflow-y: scroll;
     position: absolute;
     top: 10px;
-    bottom: 10px;
-    padding-right: 30px;
-}
-
-.grid-right .mdl-card {
-    width: 90%;
-    margin: 10px auto;
-    text-align: center;
-    border-color: #eee;
-    min-height: 0px;
-}
-
-.grid-right .mdl-card__supporting-text {
-    padding-top: 0;
+    bottom: 20px;
 }
 
 #drop {
-    height: 100%;
-    width: 90%;
+    min-height: 30%;
+    max-height: 80%;
+    width: 80%;
     border: 1px solid #ddd;
-    padding-bottom: 20px;
+    background-color: #f0f0f0;
+    padding: 20px;
+    padding-bottom: 60px;
     position: absolute;
-    overflow: auto;
+    overflow-y: auto;
+}
+
+/*prog card*/
+.prog_card {
+    margin: 10px;
+    background: white;
+}
+
+.prog_card.invalid {
+    background-color: rgba(255, 0, 0, 0.3);
+    border-color: transparent !important;
+}
+
+.prog_card > div {
+    display: inline-block;
+    margin: 0 2%;
+}
+
+.prog_card-img {
+    padding: 10px 0;
+    width: 11%;
+}
+
+.prog_card-img img {
+    width: 100%;
+}
+
+.prog_card-args {
+    width: 60%;
 }
 
 /* *****************************************************************

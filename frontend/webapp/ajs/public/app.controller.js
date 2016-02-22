@@ -33,7 +33,8 @@
         self.progState = 0;  // zero if in sync with the saved program
 
 
-        _getCardId();    //TODO
+        //_getCardId();    //TODO
+        self.cardId = "test";
 
         self.cardIdParam = {cardId: self.cardId}; //TODO
 
