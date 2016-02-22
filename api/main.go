@@ -12,6 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//   _   _                     _                             _        _
+//  | |_| |__  _   _ _ __ ___ (_) ___         ___ __ _ _ __ | |_ __ _(_)_ __
+//  | __| '_ \| | | | '_ ` _ \| |/ _ \ _____ / __/ _` | '_ \| __/ _` | | '_ \
+//  | |_| | | | |_| | | | | | | | (_) |_____| (_| (_| | |_) | || (_| | | | | |
+//   \__|_| |_|\__, |_| |_| |_|_|\___/       \___\__,_| .__/ \__\__,_|_|_| |_|
+//             |___/                                  |_|
+//
+
+// API
 package main
 
 import (
@@ -71,6 +80,8 @@ var (
 	store    *mongostore.MongoStore
 )
 
+// sessionValues extracts session info from the HTTP header. It first looks for a "Authorization" header and then
+// it looks for a cookie. It returns a map of the session data.
 func sessionValues(r *http.Request) (values map[interface{}]interface{}, err error) {
 	err = nil
 	// check authorization header
@@ -84,7 +95,7 @@ func sessionValues(r *http.Request) (values map[interface{}]interface{}, err err
 		var sessionID string
 		if err == nil {
 			err = securecookie.DecodeMulti(sessionKey, t[len(t)-1], &sessionID, store.Codecs...)
-			log.Debugf("Session ID: %v", sessionID)
+			log.Debugf("Session ID = %v", sessionID)
 		}
 		if err == nil {
 			if !bson.IsObjectIdHex(sessionID) {
@@ -101,7 +112,7 @@ func sessionValues(r *http.Request) (values map[interface{}]interface{}, err err
 	} else {
 		session, err := store.Get(r, sessionKey)
 		if err == nil {
-			log.Debugf("Cookie found. ID: %v", session.ID)
+			log.Debugf("Cookie found / ID = %v", session.ID)
 			values = session.Values
 		}
 	}
@@ -111,7 +122,11 @@ func sessionValues(r *http.Request) (values map[interface{}]interface{}, err err
 	return
 }
 
-func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string, values map[interface{}]interface{}, err error) {
+// initSession "bootstrap" the HTTP session. It configure the variables in the multiplexer and returns
+// the session values. It also add cache control headers.
+func initSession(w http.ResponseWriter, r *http.Request) (
+	vars map[string]string, values map[interface{}]interface{}, err error) {
+
 	log.Debugf("request: %v", r.URL.String())
 	database.Session.Refresh()
 	vars = mux.Vars(r)
@@ -141,6 +156,19 @@ func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string
 	return
 }
 
+// checkAdmin returns nil if the session is an authorized admin.
+func checkAdmin(w http.ResponseWriter, session map[interface{}]interface{}) error {
+	value, ok := session["admin"]
+	if ok && value == "1" {
+		return nil
+	} else {
+		err := errors.New("Not authorized")
+		http.Error(w, err.Error(), 401)
+		return err
+	}
+}
+
+// report check the err argument and if not nil, it logs the error and returns the error using HTTP
 func report(w http.ResponseWriter, err error) error {
 	if err != nil {
 		errorDesc, _ := json.Marshal(JsonError{err.Error()})
@@ -150,6 +178,26 @@ func report(w http.ResponseWriter, err error) error {
 	return err
 }
 
+// GetInfo is the handler for the "GET /info" method
+func GetInfo(w http.ResponseWriter, r *http.Request) {
+	_, session, err := initSession(w, r)
+	if report(w, err) != nil {
+		return
+	}
+
+	var info Info
+	if cardId, ok := session["cardId"]; ok {
+		info.CardId = cardId.(string)
+	}
+
+	if admin, ok := session["admin"]; ok {
+		info.IsAdmin = admin == "1"
+	}
+
+	json.NewEncoder(w).Encode(info)
+}
+
+// GetCard is the handler for the "GET /card/{cardId}" method
 func GetCard(w http.ResponseWriter, r *http.Request) {
 	vars, _, err := initSession(w, r)
 	if report(w, err) != nil {
@@ -158,15 +206,13 @@ func GetCard(w http.ResponseWriter, r *http.Request) {
 
 	var card Card
 	err = database.C(cardC).Find(bson.M{"cardId": vars["cardId"]}).One(&card)
-	if err != nil {
-		errorDesc, _ := json.Marshal(JsonError{err.Error()})
-		log.Info(err)
-		http.Error(w, string(errorDesc), 400)
-	} else {
-		json.NewEncoder(w).Encode(card)
+	if report(w, err) != nil {
+		return
 	}
+	json.NewEncoder(w).Encode(card)
 }
 
+// PutCard is the handler for the "PUT|POST /card/{cardId}" method
 func PutCard(w http.ResponseWriter, r *http.Request) {
 	vars, _, err := initSession(w, r)
 	if report(w, err) != nil {
@@ -194,27 +240,136 @@ func PutCard(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(JsonOK{"done"})
 }
 
-func GetInfo(w http.ResponseWriter, r *http.Request) {
-	_, values, err := initSession(w, r)
+// GetRobots is the handler for the "GET /robots" method
+func GetRobots(w http.ResponseWriter, r *http.Request) {
+	_, session, err := initSession(w, r)
 	if report(w, err) != nil {
 		return
 	}
 
-	var info Info
-	if cardId, ok := values["cardId"]; ok {
-		info.CardId = cardId.(string)
+	if checkAdmin(w, session) != nil {
+		return
 	}
 
-	if admin, ok := values["admin"]; ok {
-		info.IsAdmin = admin == "1"
+	var robots []Robot
+	err = database.C(robotC).Find(nil).All(&robots)
+	if report(w, err) != nil {
+		return
 	}
-
-	json.NewEncoder(w).Encode(info)
+	json.NewEncoder(w).Encode(robots)
 }
 
-func AssociateRobot(w http.ResponseWriter, r *http.Request) {
-	vars, _, err := initSession(w, r)
+// GetRobot is the handler for the "GET /robot/{robotName}" method
+func GetRobot(w http.ResponseWriter, r *http.Request) {
+	vars, session, err := initSession(w, r)
 	if report(w, err) != nil {
+		return
+	}
+
+	if checkAdmin(w, session) != nil {
+		return
+	}
+
+	var robot Robot
+	err = database.C(robotC).Find(bson.M{"name": vars["robotName"]}).One(&robot)
+	if report(w, err) != nil {
+		return
+	}
+	json.NewEncoder(w).Encode(robot)
+
+}
+
+// PutRobot is the handler for the "PUT|POST /robot/{robotName}" method
+func PutRobot(w http.ResponseWriter, r *http.Request) {
+	vars, session, err := initSession(w, r)
+	if report(w, err) != nil {
+		return
+	}
+
+	if checkAdmin(w, session) != nil {
+		return
+	}
+
+	var payload struct {
+		URL string `json:"url"`
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&payload)
+	if report(w, err) != nil {
+		return
+	}
+
+	var robot Robot
+	robot.Name = vars["robotName"]
+	robot.URL = payload.URL
+	robot.CardId = ""
+
+	_, err = database.C(robotC).Upsert(
+		bson.M{"name": vars["robotName"]},
+		bson.M{
+			"$set":         bson.M{"url": robot.URL},
+			"$setOnInsert": bson.M{"cardId": ""}})
+	if report(w, err) != nil {
+		return
+	}
+	json.NewEncoder(w).Encode(JsonOK{"done"})
+
+}
+
+// DelRobot is the handler for the "DELETE /robot/{robotName}" method
+func DelRobot(w http.ResponseWriter, r *http.Request) {
+	vars, session, err := initSession(w, r)
+	if report(w, err) != nil {
+		return
+	}
+
+	if checkAdmin(w, session) != nil {
+		return
+	}
+
+	_, err = database.C(robotC).RemoveAll(bson.M{"name": vars["robotName"]})
+	if report(w, err) != nil {
+		return
+	}
+	json.NewEncoder(w).Encode(JsonOK{"done"})
+}
+
+// PingRobot is the handler for the "GET /robot/{robotName}/ping" method
+func PingRobot(w http.ResponseWriter, r *http.Request) {
+	vars, session, err := initSession(w, r)
+	if report(w, err) != nil {
+		return
+	}
+
+	if checkAdmin(w, session) != nil {
+		return
+	}
+
+	var robot Robot
+	err = database.C(robotC).Find(bson.M{"name": vars["robotName"]}).One(&robot)
+	if report(w, err) != nil {
+		return
+	}
+	u, _ := url.Parse(robot.URL)
+	u.Path = filepath.Join(u.Path, "/ping")
+	log.Infof("Sending ping command to robot: %v", u)
+	var client http.Client
+	res, err := client.Get(u.String())
+	if report(w, err) != nil {
+		return
+	}
+	w.WriteHeader(res.StatusCode)
+	io.Copy(w, res.Body)
+}
+
+// AssociateRobot is the handler for the "PUT|POST /robot/{robotName}/card/{cardId}" method
+func AssociateRobot(w http.ResponseWriter, r *http.Request) {
+	vars, session, err := initSession(w, r)
+	if report(w, err) != nil {
+		return
+	}
+
+	if checkAdmin(w, session) != nil {
 		return
 	}
 
@@ -248,9 +403,14 @@ func AssociateRobot(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(JsonOK{"done"})
 }
 
+// DissociateRobot is the handler for the "DELETE /robot/{robotName}/card/" method
 func DissociateRobot(w http.ResponseWriter, r *http.Request) {
-	vars, _, err := initSession(w, r)
+	vars, session, err := initSession(w, r)
 	if report(w, err) != nil {
+		return
+	}
+
+	if checkAdmin(w, session) != nil {
 		return
 	}
 
@@ -265,103 +425,7 @@ func DissociateRobot(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetRobot(w http.ResponseWriter, r *http.Request) {
-	vars, _, err := initSession(w, r)
-	if report(w, err) != nil {
-		return
-	}
-
-	var robot Robot
-	err = database.C(robotC).Find(bson.M{"name": vars["robotName"]}).One(&robot)
-	if report(w, err) != nil {
-		return
-	}
-	json.NewEncoder(w).Encode(robot)
-
-}
-
-func PutRobot(w http.ResponseWriter, r *http.Request) {
-	vars, _, err := initSession(w, r)
-	if report(w, err) != nil {
-		return
-	}
-
-	var payload struct {
-		URL string `json:"url"`
-	}
-
-	err = json.NewDecoder(r.Body).Decode(&payload)
-	if report(w, err) != nil {
-		return
-	}
-
-	var robot Robot
-	robot.Name = vars["robotName"]
-	robot.URL = payload.URL
-	robot.CardId = ""
-
-	_, err = database.C(robotC).Upsert(
-		bson.M{"name": vars["robotName"]},
-		bson.M{
-			"$set":         bson.M{"url": robot.URL},
-			"$setOnInsert": bson.M{"cardId": ""}})
-	if report(w, err) != nil {
-		return
-	}
-	json.NewEncoder(w).Encode(JsonOK{"done"})
-
-}
-
-func DelRobot(w http.ResponseWriter, r *http.Request) {
-	vars, _, err := initSession(w, r)
-	if report(w, err) != nil {
-		return
-	}
-
-	_, err = database.C(robotC).RemoveAll(bson.M{"name": vars["robotName"]})
-	if report(w, err) != nil {
-		return
-	}
-	json.NewEncoder(w).Encode(JsonOK{"done"})
-}
-
-func GetRobots(w http.ResponseWriter, r *http.Request) {
-	_, _, err := initSession(w, r)
-	if report(w, err) != nil {
-		return
-	}
-
-	var robots []Robot
-	err = database.C(robotC).Find(nil).All(&robots)
-	if report(w, err) != nil {
-		return
-	}
-	json.NewEncoder(w).Encode(robots)
-}
-
-func PingRobot(w http.ResponseWriter, r *http.Request) {
-	vars, _, err := initSession(w, r)
-	if report(w, err) != nil {
-		return
-	}
-
-	var robot Robot
-	err = database.C(robotC).Find(bson.M{"name": vars["robotName"]}).One(&robot)
-	if report(w, err) != nil {
-		return
-	}
-	u, _ := url.Parse(robot.URL)
-	u.Path = filepath.Join(u.Path, "/ping")
-	log.Infof("Sending ping command to robot: %v", u)
-	var client http.Client
-	res, err := client.Get(u.String())
-	if report(w, err) != nil {
-		return
-	}
-	w.WriteHeader(res.StatusCode)
-	io.Copy(w, res.Body)
-}
-
+// PingCardRobot is the handler for the "GET /card/{cardId}/ping" method
 func PingCardRobot(w http.ResponseWriter, r *http.Request) {
 	vars, _, err := initSession(w, r)
 	if report(w, err) != nil {
@@ -386,6 +450,7 @@ func PingCardRobot(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, res.Body)
 }
 
+// RunCardRobot is the handler for the "GET /card/{cardId}/run" method
 func RunCardRobot(w http.ResponseWriter, r *http.Request) {
 	vars, _, err := initSession(w, r)
 	if report(w, err) != nil {
@@ -410,6 +475,7 @@ func RunCardRobot(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, res.Body)
 }
 
+// StopCardRobot is the handler for the "GET /card/{cardId}/stop" method
 func StopCardRobot(w http.ResponseWriter, r *http.Request) {
 	vars, _, err := initSession(w, r)
 	if report(w, err) != nil {
@@ -434,6 +500,7 @@ func StopCardRobot(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, res.Body)
 }
 
+// UploadCardRobot is the handler for the "GET|PUT|POST /card/{cardId}/upload" method
 func UploadCardRobot(w http.ResponseWriter, r *http.Request) {
 	vars, _, err := initSession(w, r)
 	if report(w, err) != nil {
@@ -480,6 +547,7 @@ type CorsServer struct {
 	r *mux.Router
 }
 
+// ServeHTTP is a HTTP handler that implements permissive CORS rules
 func (s *CorsServer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if origin := req.Header.Get("Origin"); origin != "" {
 		rw.Header().Set("Access-Control-Allow-Origin", origin)
@@ -527,20 +595,25 @@ func main() {
 
 	r := mux.NewRouter()
 
+	// Info
 	r.HandleFunc(prefix+"/info", GetInfo).Methods("GET")
 
+	// Card management
 	r.HandleFunc(prefix+"/card/{cardId}", GetCard).Methods("GET")
 	r.HandleFunc(prefix+"/card/{cardId}", PutCard).Methods("PUT", "POST")
 
+	// Robot management
+	r.HandleFunc(prefix+"/robots", GetRobots).Methods("GET")
 	r.HandleFunc(prefix+"/robot/{robotName}", GetRobot).Methods("GET")
 	r.HandleFunc(prefix+"/robot/{robotName}", PutRobot).Methods("PUT", "POST")
 	r.HandleFunc(prefix+"/robot/{robotName}", DelRobot).Methods("DELETE")
 	r.HandleFunc(prefix+"/robot/{robotName}/ping", PingRobot).Methods("GET")
 
+	// Robot/Card associations
 	r.HandleFunc(prefix+"/robot/{robotName}/card/{cardId}", AssociateRobot).Methods("PUT", "POST")
 	r.HandleFunc(prefix+"/robot/{robotName}/card", DissociateRobot).Methods("DELETE")
 
-	r.HandleFunc(prefix+"/robots", GetRobots).Methods("GET")
+	// Robot control
 	r.HandleFunc(prefix+"/card/{cardId}/ping", PingCardRobot).Methods("GET")
 	r.HandleFunc(prefix+"/card/{cardId}/run", RunCardRobot).Methods("GET")
 	r.HandleFunc(prefix+"/card/{cardId}/stop", StopCardRobot).Methods("GET")
