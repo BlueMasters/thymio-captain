@@ -46,8 +46,12 @@
         } );
 
         $httpProvider.defaults.transformResponse.push( function( data, headerGetter ){
-            if( data && data.program ){
-                data.program = JSON.parse( $base64.decode( data.program ) );
+            if( data && data.hasOwnProperty("program") ){
+                if(data.program) {
+                    data.program = JSON.parse($base64.decode(data.program));
+                }else{
+                    data.program = [];
+                }
             }
             return data;
         } );
