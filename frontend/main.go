@@ -24,6 +24,9 @@
 package main
 
 import (
+	"crypto/hmac"
+	"crypto/sha1"
+	"encoding/hex"
 	"flag"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
@@ -44,8 +47,10 @@ const (
 )
 
 var (
-	database *mgo.Session
-	store    *mongostore.MongoStore
+	database       *mgo.Session
+	store          *mongostore.MongoStore
+	adminSecretKey *string
+	startSecretKey *string
 )
 
 func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string, session *sessions.Session, err error) {
@@ -62,13 +67,25 @@ func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string
 	return
 }
 
+func isValidToken(token string, key string) bool {
+	if len(token) != 40 {
+		return false
+	}
+	data := token[0:20]
+	sig := token[20:40]
+	mac := hmac.New(sha1.New, []byte(key))
+	mac.Write([]byte(data))
+	s, err := hex.DecodeString(sig)
+	return err == nil && hmac.Equal(mac.Sum(nil), s)
+}
+
 func CardLogin(w http.ResponseWriter, r *http.Request) {
 	vars, session, err := initSession(w, r)
 	if err != nil {
 		return
 	}
 
-	if vars["CardId"] == "friendship" {
+	if isValidToken(vars["CardId"], *adminSecretKey) {
 		session.Values["admin"] = "1"
 		sessions.Save(r, w)
 		http.ServeFile(w, r, root+"/login-ok.html")
@@ -113,13 +130,17 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session.Values["cardId"] = vars["CardId"]
-	sessions.Save(r, w)
+	if *startSecretKey == "" || isValidToken(vars["CardId"], *startSecretKey) {
+		session.Values["cardId"] = vars["CardId"]
+		sessions.Save(r, w)
 
-	if session.Values["admin"] == "1" {
-		http.ServeFile(w, r, root+"/admin.html")
+		if session.Values["admin"] == "1" {
+			http.ServeFile(w, r, root+"/admin.html")
+		} else {
+			http.ServeFile(w, r, root+"/public.html")
+		}
 	} else {
-		http.ServeFile(w, r, root+"/public.html")
+		http.ServeFile(w, r, root+"/invalid-id.html")
 	}
 }
 
@@ -128,7 +149,9 @@ func main() {
 	var debug = flag.Bool("debug", false, "run in debug mode")
 	var domain = flag.String("domain", "thymio.tk", "Domain name (for the cookie)")
 	var mongoServer = flag.String("mongo-server", "localhost", "MongoDB server URL")
-	var secretKey = flag.String("secret-key", "not-so-secret", "Secret key (for secure cookies)")
+	var cookieSecretKey = flag.String("cookie-secret-key", "not-so-secret", "Secret key (for secure cookies)")
+	adminSecretKey = flag.String("admin-secret-key", "change-me", "Secret key (for admin card-login)")
+	startSecretKey = flag.String("start-secret-key", "", "Secret key (for start ID)")
 
 	flag.Parse()
 
@@ -146,7 +169,7 @@ func main() {
 	}
 	store = mongostore.NewMongoStore(
 		database.DB(dbName).C(sessionC),
-		maxAge, true, []byte(*secretKey))
+		maxAge, true, []byte(*cookieSecretKey))
 
 	store.Options.Domain = *domain
 
