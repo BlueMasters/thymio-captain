@@ -50,7 +50,7 @@
              * @returns {httpPromise} resolves with the object {cardId: "", program: ""}, or fails with error
              * description.
              */
-            getCardData: {method: 'GET', url: baseUrl + '/card/:cardId', params: {cardId: '@cardId'}},
+            getCardData: {method: 'GET', url: baseUrl + 'card/:cardId', params: {cardId: '@cardId'}},
 
             /**
              * @ngdoc
@@ -61,7 +61,7 @@
              * The body of the request is the object {cardId: "", program: ""}
              * @returns {httpPromise} resolves, or fails with error description.
              */
-            setCardData: {method: 'PUT', url: baseUrl + '/card/:cardId', params: {cardId: '@cardId'}},
+            setCardData: {method: 'PUT', url: baseUrl + 'card/:cardId', params: {cardId: '@cardId'}},
 
 
             /**
