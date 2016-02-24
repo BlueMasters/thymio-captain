@@ -33,8 +33,8 @@
         self.progState = 0;  // zero if in sync with the saved program
 
 
-        //_getCardId();    //TODO
-        self.cardId = "test";
+        _getCardId();    //TODO
+        // self.cardId = "test";
 
         self.cardIdParam = {cardId: self.cardId}; //TODO
 
@@ -66,7 +66,6 @@
 
 
         function _init(){
-            self.cardIdParam = {cardId: "jacques"};
             RestService.getCardData( self.cardIdParam, function( data ){
                 $rootScope.program = Action.fromJson( data.program );
                 _initHistory();
