@@ -207,7 +207,11 @@ func GetCard(w http.ResponseWriter, r *http.Request) {
 
 	var card Card
 	err = database.C(cardC).Find(bson.M{"cardId": vars["cardId"]}).One(&card)
-	if report(w, err) != nil {
+	if err == mgo.ErrNotFound {
+		card.CardId = vars["cardId"]
+		card.Program = []byte{}
+
+	} else if report(w, err) != nil {
 		return
 	}
 	json.NewEncoder(w).Encode(card)
