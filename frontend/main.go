@@ -86,10 +86,12 @@ func CardLogin(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if isValidToken(vars["CardId"], *adminSecretKey) {
+		log.Debugf("Valid Card Login: %v", vars["CardId"])
 		session.Values["admin"] = "1"
 		sessions.Save(r, w)
 		http.ServeFile(w, r, root+"/login-ok.html")
 	} else {
+		log.Info("Bad Card Login: %v", vars["CardId"])
 		session.Values["admin"] = "0"
 		sessions.Save(r, w)
 		http.ServeFile(w, r, root+"/login-failed.html")
@@ -102,6 +104,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Debug("Logout")
 	session.Values["admin"] = "0"
 	sessions.Save(r, w)
 	http.ServeFile(w, r, root+"/logout.html")
@@ -113,6 +116,7 @@ func Debug(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Debug("Debug page")
 	tmpl, err := template.ParseFiles(root + "/debug.html")
 	if err != nil {
 		log.Infof("Error 1 %s", err)
@@ -131,6 +135,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if *startSecretKey == "" || isValidToken(vars["CardId"], *startSecretKey) {
+		log.Debugf("Valid Start page: %v", vars["CardId"])
 		session.Values["cardId"] = vars["CardId"]
 		sessions.Save(r, w)
 
@@ -140,6 +145,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, root+"/public.html")
 		}
 	} else {
+		log.Info("Bad Start page: %v", vars["CardId"])
 		http.ServeFile(w, r, root+"/bad-card.html")
 	}
 }
@@ -160,6 +166,12 @@ func main() {
 		log.Debug("Debug mode")
 	} else {
 		log.SetLevel(log.InfoLevel)
+	}
+
+	if *startSecretKey == "" {
+		log.Warn("Running without start id validation")
+	} else {
+		log.Warn("Start id validation enabled")
 	}
 
 	var err error
