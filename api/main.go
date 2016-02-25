@@ -227,6 +227,7 @@ func PutCard(w http.ResponseWriter, r *http.Request) {
 
 	var payload struct {
 		Program []byte `json:"program"`
+		Notes   string `json:"notes"`
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&payload)
