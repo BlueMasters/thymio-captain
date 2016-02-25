@@ -74,13 +74,15 @@ func isValidToken(token string, key string) bool {
 	}
 
 	if len(t) != 40 { // TODO: replace MAGIC
-		log.Infof("Invalid token length: %i", len(t))
+		log.Infof("Invalid token length: %d", len(t))
 		return false
 	}
 	data := t[0:20] // TODO: replace MAGIC
 	sig := t[20:40] // TODO: replace MAGIC
 	mac := hmac.New(sha1.New, []byte(key))
 	mac.Write(data)
+	log.Debugf("HMAC: %v", mac.Sum(nil))
+	log.Debugf("EXP : %v", sig)
 	return hmac.Equal(mac.Sum(nil), sig)
 }
 
@@ -96,7 +98,7 @@ func CardLogin(w http.ResponseWriter, r *http.Request) {
 		sessions.Save(r, w)
 		http.ServeFile(w, r, root+"/login-ok.html")
 	} else {
-		log.Info("Bad Card Login: %v", vars["CardId"])
+		log.Infof("Bad Card Login: %v", vars["CardId"])
 		session.Values["admin"] = "0"
 		sessions.Save(r, w)
 		http.ServeFile(w, r, root+"/login-failed.html")
@@ -150,7 +152,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, root+"/public.html")
 		}
 	} else {
-		log.Info("Bad Start page: %v", vars["CardId"])
+		log.Infof("Bad Start page: %v", vars["CardId"])
 		http.ServeFile(w, r, root+"/bad-card.html")
 	}
 }
