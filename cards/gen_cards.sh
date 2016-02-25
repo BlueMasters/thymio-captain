@@ -8,4 +8,5 @@ source lib.sh
 source secret.sh
 SECRET=$USER_SECRET
 
-doc 3
+pages=${1:-3}
+doc $pages
