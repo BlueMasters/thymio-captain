@@ -74,7 +74,7 @@ func isValidToken(token string, key string) bool {
 	}
 
 	if len(t) != 40 { // TODO: replace MAGIC
-		log.Info("Invalid token length: %i", len(t))
+		log.Infof("Invalid token length: %i", len(t))
 		return false
 	}
 	data := t[0:20] // TODO: replace MAGIC
