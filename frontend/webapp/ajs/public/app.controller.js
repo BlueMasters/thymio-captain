@@ -127,7 +127,7 @@
             } );
 
             RestService.setCardData( self.cardIdParam, {program: prog}, function(){
-                showToast( 'Prgramme sauvé!' );
+                showToast( 'Programme sauvé!' );
                 self.progState = 0;
             }, function(){
                 showToast( 'ERREUR: le programme n\'a pu être sauvé' );
