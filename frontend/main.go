@@ -72,6 +72,11 @@ func isValidToken(token string, key string) bool {
 	if err != nil {
 		return false
 	}
+
+	if len(t) != 40 { // TODO: replace MAGIC
+		log.Info("Invalid token length: %i", len(t))
+		return false
+	}
 	data := t[0:20] // TODO: replace MAGIC
 	sig := t[20:40] // TODO: replace MAGIC
 	mac := hmac.New(sha1.New, []byte(key))
@@ -171,7 +176,7 @@ func main() {
 	if *startSecretKey == "" {
 		log.Warn("Running without start id validation")
 	} else {
-		log.Warn("Start id validation enabled")
+		log.Info("Start id validation enabled")
 	}
 
 	var err error
