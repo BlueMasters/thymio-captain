@@ -64,6 +64,7 @@ type Robot struct {
 
 type Card struct {
 	CardId  string `json:"cardId" bson:"cardId"`
+	Notes   string `json:"notes" bson:"notes"`
 	Program []byte `json:"program" bson:"program"`
 }
 
