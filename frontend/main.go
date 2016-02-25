@@ -26,7 +26,7 @@ package main
 import (
 	"crypto/hmac"
 	"crypto/sha1"
-	"encoding/hex"
+	"encoding/base64"
 	"flag"
 	"fmt"
 	log "github.com/Sirupsen/logrus"
@@ -68,15 +68,15 @@ func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string
 }
 
 func isValidToken(token string, key string) bool {
-	if len(token) != 40 {
+	t, err := base64.RawURLEncoding.DecodeString(token)
+	if err != nil {
 		return false
 	}
-	data := token[0:20]
-	sig := token[20:40]
+	data := t[0:20] // TODO: replace MAGIC
+	sig := t[20:40] // TODO: replace MAGIC
 	mac := hmac.New(sha1.New, []byte(key))
-	mac.Write([]byte(data))
-	s, err := hex.DecodeString(sig)
-	return err == nil && hmac.Equal(mac.Sum(nil), s)
+	mac.Write(data)
+	return hmac.Equal(mac.Sum(nil), sig)
 }
 
 func CardLogin(w http.ResponseWriter, r *http.Request) {
@@ -140,7 +140,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, root+"/public.html")
 		}
 	} else {
-		http.ServeFile(w, r, root+"/invalid-id.html")
+		http.ServeFile(w, r, root+"/bad-card.html")
 	}
 }
 
