@@ -34,7 +34,7 @@
 
 
         _getCardId();    //TODO
-        // self.cardId = "test";
+        //self.cardId = "test";
 
         self.cardIdParam = {cardId: self.cardId}; //TODO
 
@@ -69,6 +69,7 @@
             RestService.getCardData( self.cardIdParam, function( data ){
                 $rootScope.program = Action.fromJson( data.program );
                 _initHistory();
+                _addConfirmDialogOnClose();
                 console.log( "Initialisation done: ", data );
             }, _log );
         }
@@ -86,6 +87,15 @@
             h.addRedoHandler( 'rh', function(){
                 self.progState++;
             } );
+        }
+
+        function _addConfirmDialogOnClose(){
+            // add confirmation dialog on close
+            $( window ).bind( 'beforeunload', function(){
+                    if( self.progState != 0 ) return 'Attention! Certains de tes changements ne sont pas' +
+                        ' sauvegardés. En quittant la page, ces derniers seront perdus!';
+                }
+            );
         }
 
         //##------------ drag and drop
@@ -121,12 +131,7 @@
         //##------------ rest
 
         function saveCardInfos(){
-            var prog = [];
-            angular.forEach( $rootScope.program, function( action ){
-                prog.push( action.toJson() );
-            } );
-
-            RestService.setCardData( self.cardIdParam, {program: prog}, function(){
+            RestService.setCardData( self.cardIdParam, {program: _createProg()}, function(){
                 showToast( 'Programme sauvé!' );
                 self.progState = 0;
             }, function(){
@@ -135,10 +140,30 @@
         }
 
         function uploadProgram(){
+            if( $rootScope.program.length == 0 ){
+                showMessageDialog( "Pas de programme", "Il faut d'abord que tu écrives un programme... " );
+            }else{
+                if( self.progState != 0 ){
+                    // save prog before upload
+                    RestService.setCardData( self.cardIdParam, {program: _createProg()}, function(){
+                        self.progState = 0;
+                        _uploadProgram();
+
+                    }, function(){
+                        showToast( 'ERREUR: le programme n\'a pu être sauvé' );
+                    } );  // TODO errors
+
+                }else{
+                    _uploadProgram();
+                }
+            }
+        }
+
+        function _uploadProgram(){
             RestService.upload( self.cardIdParam, showRunStopDialog,
                 function(){
                     showMessageDialog( "Pas de Thymio", "Tu n'as pas encore de Thymio attribué. Demande de l'aide à un" +
-                        " animateur et réessaie" );
+                        " animateur et réessaie." );
                 } );
         }
 
@@ -185,17 +210,24 @@
 
         //##------------ utils
 
+        function _createProg(){
+            var prog = [];
+            angular.forEach( $rootScope.program, function( action ){
+                prog.push( action.toJson() );
+            } );
+            return prog;
+        }
 
         function _log( o ){
             console.log( o );
         }
 
         function _getCardId(){
-            var m  = window.location.pathname.match('.*start/([^/#\?]*).*');
-            if(m && m.length > 1){
+            var m = window.location.pathname.match( '.*start/([^/#\?]*).*' );
+            if( m && m.length > 1 ){
                 self.cardId = m[1];
             }else{
-                $('body').html("ERREUR: pas de cardId. ACCES INTERDIT");
+                $( 'body' ).html( "ERREUR: pas de cardId. ACCES INTERDIT" );
             }
         }
 
