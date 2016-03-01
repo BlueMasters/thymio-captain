@@ -238,6 +238,7 @@ func PutCard(w http.ResponseWriter, r *http.Request) {
 	var card Card
 	card.CardId = vars["cardId"]
 	card.Program = payload.Program
+	card.Notes = payload.Notes
 
 	_, err = database.C(cardC).Upsert(bson.M{"cardId": vars["cardId"]}, card)
 	report(w, err)
