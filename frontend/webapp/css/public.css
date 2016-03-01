@@ -125,6 +125,11 @@ select:focus {
     bottom: 20px;
 }
 
+#notesArea{
+   width: 80%;
+    margin:20px;
+}
+
 #drop {
     min-height: 30%;
     max-height: 80%;

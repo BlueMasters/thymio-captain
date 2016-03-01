@@ -4,7 +4,7 @@
 <div class="header" style="padding: 10px; margin-bottom: 10px;">
     <!-- save in the cloud -->
     <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
-            ng-click="ctrl.save()" ng-disabled="prog.$invalid || ctrl.progState == 0">
+            ng-click="ctrl.save()" ng-disabled="prog.$invalid || (ctrl.progState == 0 && !ctrl.notesDirty())">
         <i class="material-icons">backup</i>
     </button>
     <!-- help -->
@@ -56,6 +56,12 @@
     <!-- right column -->
     <div class="mdl-cell mdl-cell--7-col mdl-cell--4-col-tablet grid-right">
         <h2>Ton programme</h2>
+        <!--notes Textfield -->
+        <div id="notesArea" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <textarea class="mdl-textfield__input" id="notes" type="text" rows="2"
+                          ng-model="ctrl.notes"></textarea>
+            <label class="mdl-textfield__label" for="notes">tes notes sur le programme</label>
+        </div>
         <!--drop container-->
         <form name="prog" novalidate>
             <div id="drop" data-as-sortable="ctrl.programDdConfig"
