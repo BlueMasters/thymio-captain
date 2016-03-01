@@ -15,7 +15,8 @@
 </head>
 <body ng-app="thymioCaptain.app">
 
-<div ng-controller="MainCtrl as ctrl" class="container" ng-include src="'/html/public/main.html'"><!-- add fade class to
+<div ng-controller="MainCtrl as ctrl" class="container" ng-include src="'/html/public/main.html'"
+  onload="ctrl.contentLoaded()"><!-- add fade class to
 enable
 transition effects -->
 </div>

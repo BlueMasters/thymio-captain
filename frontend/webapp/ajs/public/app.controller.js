@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function MainCtrl( $rootScope, RestService, Action, History ){
+    function MainCtrl( $rootScope, $scope, RestService, Action, History ){
 
         var self = this;
 
@@ -31,11 +31,11 @@
         $rootScope.program = [];  // the program (set in the init())
 
         self.progState = 0;  // zero if in sync with the saved program
-
+        self.notes = "";
+        self.savedNotes = ""; // last saved notes
 
         _getCardId();    //TODO
-        // self.cardId = "test";
-
+        //self.cardId = "test";
         self.cardIdParam = {cardId: self.cardId}; //TODO
 
         _init();
@@ -47,6 +47,8 @@
         self.undo = historyUndo;
         self.redo = histroyRedo;
 
+        self.notesDirty = isNotesFieldDirty;
+
         self.save = saveCardInfos;
         self.upload = uploadProgram;
         self.run = runProgram;
@@ -54,9 +56,7 @@
 
         self.dial = showRunStopDialog;
 
-        self.test = function(){
-            console.log( 'test' );
-        };
+        self.contentLoaded = updateMdl;
 
         /* *****************************************************************
          * implementation
@@ -68,9 +68,17 @@
         function _init(){
             RestService.getCardData( self.cardIdParam, function( data ){
                 $rootScope.program = Action.fromJson( data.program );
+                _initNotes( data.notes );
                 _initHistory();
+                _addConfirmDialogOnClose();
                 console.log( "Initialisation done: ", data );
+                updateMdl();
             }, _log );
+        }
+
+        function _initNotes( notes ){
+            self.notes = self.savedNotes = notes;
+            updateMdl();
         }
 
         function _initHistory(){
@@ -86,6 +94,23 @@
             h.addRedoHandler( 'rh', function(){
                 self.progState++;
             } );
+        }
+
+        function _addConfirmDialogOnClose(){
+            // add confirmation dialog on close
+            $( window ).bind( 'beforeunload', function(){
+                    if( self.progState != 0 ) return 'Attention! Certains de tes changements ne sont pas' +
+                        ' sauvegardés. En quittant la page, ces derniers seront perdus!';
+                }
+            );
+        }
+
+
+        function updateMdl(){
+            console.log( "update mdl" );
+            componentHandler.upgradeAllRegistered();
+            if( self.notes )
+                $( '#notesArea' ).addClass( "is-dirty" );
         }
 
         //##------------ drag and drop
@@ -118,16 +143,16 @@
             return History.canUndo( 'program' );
         }
 
+        function isNotesFieldDirty(){
+            return self.notes != self.savedNotes;
+        }
+
         //##------------ rest
 
         function saveCardInfos(){
-            var prog = [];
-            angular.forEach( $rootScope.program, function( action ){
-                prog.push( action.toJson() );
-            } );
-
-            RestService.setCardData( self.cardIdParam, {program: prog}, function(){
+            RestService.setCardData( self.cardIdParam, {notes: self.notes, program: _createProg()}, function(){
                 showToast( 'Programme sauvé!' );
+                self.savedNotes = self.notes;
                 self.progState = 0;
             }, function(){
                 showToast( 'ERREUR: le programme n\'a pu être sauvé' );
@@ -135,10 +160,31 @@
         }
 
         function uploadProgram(){
+            if( $rootScope.program.length == 0 ){
+                showMessageDialog( "Pas de programme", "Il faut d'abord que tu écrives un programme... " );
+            }else{
+                if( self.progState != 0 ){
+                    // save prog before upload
+                    RestService.setCardData( self.cardIdParam, {notes: self.notes, program: _createProg()}, function(){
+                        self.progState = 0;
+                        self.savedNotes = self.notes;
+                        _uploadProgram();
+
+                    }, function(){
+                        showToast( 'ERREUR: le programme n\'a pu être sauvé' );
+                    } );  // TODO errors
+
+                }else{
+                    _uploadProgram();
+                }
+            }
+        }
+
+        function _uploadProgram(){
             RestService.upload( self.cardIdParam, showRunStopDialog,
                 function(){
                     showMessageDialog( "Pas de Thymio", "Tu n'as pas encore de Thymio attribué. Demande de l'aide à un" +
-                        " animateur et réessaie" );
+                        " animateur et réessaie." );
                 } );
         }
 
@@ -185,17 +231,24 @@
 
         //##------------ utils
 
+        function _createProg(){
+            var prog = [];
+            angular.forEach( $rootScope.program, function( action ){
+                prog.push( action.toJson() );
+            } );
+            return prog;
+        }
 
         function _log( o ){
             console.log( o );
         }
 
         function _getCardId(){
-            var m  = window.location.pathname.match('.*start/([^/#\?]*).*');
-            if(m && m.length > 1){
+            var m = window.location.pathname.match( '.*start/([^/#\?]*).*' );
+            if( m && m.length > 1 ){
                 self.cardId = m[1];
             }else{
-                $('body').html("ERREUR: pas de cardId. ACCES INTERDIT");
+                $( 'body' ).html( "ERREUR: pas de cardId. ACCES INTERDIT" );
             }
         }
 

@@ -1,7 +1,7 @@
 /* Style Select Field */
 
 body {
-    /*overflow: hidden;*/
+    overflow: hidden;
     margin: 10px;
 }
 
@@ -123,6 +123,11 @@ select:focus {
     position: absolute;
     top: 10px;
     bottom: 20px;
+}
+
+#notesArea{
+   width: 80%;
+    margin:20px;
 }
 
 #drop {
