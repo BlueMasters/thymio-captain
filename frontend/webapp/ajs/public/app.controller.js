@@ -18,11 +18,12 @@
      */
     angular
         .module( 'thymioCaptain.app' )
-        .controller( 'MainCtrl', MainCtrl );
+        .controller( 'MainCtrl', MainCtrl )
+        .controller( 'ModalCtrl', ModalCtrl );
 
     // --------------------------
 
-    function MainCtrl( $rootScope, $scope, RestService, Action, History ){
+    function MainCtrl( $rootScope, ModalService, RestService, Action, History ){
 
         var self = this;
 
@@ -210,15 +211,17 @@
         }
 
         function showRunStopDialog(){
-            showDialog( {
-                customContent: '#runDialogContent',
-                positive     : {
-                    title  : 'fermer',
-                    onClick: self.stop
+            ModalService.showModal( {
+                templateUrl: 'runDialogTemplate.html',
+                controller : "DefaultModalController",
+                inputs     : {
+                    attrs: {run: runProgram, stop: stopProgram}
                 }
+
+            } ).then( function( modal ){
+                modal.element.modal();
             } );
         }
-
 
         function showToast( message ){
             $( '.mdl-js-snackbar' )[0].MaterialSnackbar.showSnackbar(
@@ -253,5 +256,11 @@
         }
 
     }
+
+    /* *****************************************************************
+     * modal
+     * ****************************************************************/
+
+    function ModalCtrl(){}
 
 }());
