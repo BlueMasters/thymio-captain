@@ -18,8 +18,7 @@
      */
     angular
         .module( 'thymioCaptain.app' )
-        .controller( 'MainCtrl', MainCtrl )
-        .controller( 'ModalCtrl', ModalCtrl );
+        .controller( 'MainCtrl', MainCtrl );
 
     // --------------------------
 
@@ -218,8 +217,6 @@
                     attrs: {run: runProgram, stop: stopProgram}
                 }
 
-            } ).then( function( modal ){
-                modal.element.modal();
             } );
         }
 
