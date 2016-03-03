@@ -39,7 +39,7 @@ function showDialog( options ){
     if( options.customContent != null ){
         console.log( options.customContent );
         console.log( $( options.customContent ) );
-        $( options.customContent ).clone().css( 'display', 'block' ).appendTo( content );
+        $(angular.copy($( options.customContent )[0])).css( 'display', 'block' ).appendTo( content );
     }
     if( options.negative || options.positive ){
         var buttonBar = $( '<div class="mdl-card__actions dialog-button-bar"></div>' );

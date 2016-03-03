@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function MainCtrl( $rootScope, $scope, RestService, Action, History ){
+    function MainCtrl( $rootScope, ModalService, RestService, Action, History ){
 
         var self = this;
 
@@ -210,15 +210,15 @@
         }
 
         function showRunStopDialog(){
-            showDialog( {
-                customContent: '#runDialogContent',
-                positive     : {
-                    title  : 'fermer',
-                    onClick: self.stop
+            ModalService.showModal( {
+                templateUrl: 'runDialogTemplate.html',
+                controller : "DefaultModalController",
+                inputs     : {
+                    attrs: {run: runProgram, stop: stopProgram}
                 }
+
             } );
         }
-
 
         function showToast( message ){
             $( '.mdl-js-snackbar' )[0].MaterialSnackbar.showSnackbar(
@@ -253,5 +253,11 @@
         }
 
     }
+
+    /* *****************************************************************
+     * modal
+     * ****************************************************************/
+
+    function ModalCtrl(){}
 
 }());

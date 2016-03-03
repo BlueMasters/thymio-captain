@@ -30,7 +30,8 @@
             'thymioCaptain.actions',
             'ngAnimate',
             'as.sortable',
-            'decipher.history'
+            'decipher.history',
+            'derlin.modals'
         ] );
 
 }());

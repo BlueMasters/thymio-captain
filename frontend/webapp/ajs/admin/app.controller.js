@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function MainCtrl( $rootScope, $scope, RestService, $timeout ){
+    function MainCtrl( $scope, RestService ){
 
         // disgusting fix for mdl + ng-include
         $scope.contentLoaded = function(){
