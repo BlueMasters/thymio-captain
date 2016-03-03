@@ -13,9 +13,9 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body ng-app="thymioCaptain.app">
+<body ng-app="thymioCaptain.app" ng-controller="MainCtrl as ctrl">
 
-<div ng-controller="MainCtrl as ctrl" class="container" ng-include src="'/html/public/main.html'"
+<div  class="container" ng-include src="'/html/public/main.html'"
   onload="ctrl.contentLoaded()"><!-- add fade class to
 enable
 transition effects -->

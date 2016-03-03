@@ -1,0 +1,76 @@
+html, body {
+    font-family: 'Roboto', 'Helvetica', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.thymio-captain .mdl-layout__header-row {
+    padding-left: 0px;
+}
+
+h1 {
+    padding-top: 42px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.is-small-screen h1 {
+    font-size: 35px;
+    padding-bottom: 16px;
+    padding-top: 0px;
+}
+
+.is-small-screen img.heiafr-logo {
+    width: 300px;
+}
+
+img.heiafr-logo {
+    width: 700px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.thymio-jumbo {
+    padding-top: 100px;
+    padding-bottom: 100px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-size: 120px;
+    font-weight: bolder;
+    color: orange;
+}
+
+.material-icons {
+    font-size: inherit;
+}
+
+.thymio-ok {
+    color: green;
+}
+
+.thymio-fail {
+    color: red;
+}
+
+.is-small-screen .thymio-jumbo {
+    font-size: 70px;
+}
+
+.thymio-center-links {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.thymio-jumbo i {
+    position: relative;
+    top: 20px;
+}
+
+.is-small-screen .thymio-jumbo i {
+    position: relative;
+    top: 10px;
+}

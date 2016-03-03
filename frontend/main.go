@@ -36,6 +36,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"html/template"
 	"net/http"
+	"path/filepath"
 )
 
 const (
@@ -51,6 +52,7 @@ var (
 	store          *mongostore.MongoStore
 	adminSecretKey *string
 	startSecretKey *string
+	templates      = make(map[string]*template.Template)
 )
 
 func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string, session *sessions.Session, err error) {
@@ -91,17 +93,19 @@ func CardLogin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-
 	if isValidToken(vars["CardId"], *adminSecretKey) {
 		log.Debugf("Valid Card Login: %v", vars["CardId"])
 		session.Values["admin"] = "1"
 		sessions.Save(r, w)
-		http.ServeFile(w, r, root+"/login-ok.html")
+		err = templates["login-ok.html"].Execute(w, nil)
 	} else {
 		log.Infof("Bad Card Login: %v", vars["CardId"])
 		session.Values["admin"] = "0"
 		sessions.Save(r, w)
-		http.ServeFile(w, r, root+"/login-failed.html")
+		err = templates["login-failed.html"].Execute(w, nil)
+	}
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
@@ -114,7 +118,39 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	log.Debug("Logout")
 	session.Values["admin"] = "0"
 	sessions.Save(r, w)
-	http.ServeFile(w, r, root+"/logout.html")
+
+	err = templates["logout.html"].Execute(w, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func Index(w http.ResponseWriter, r *http.Request) {
+	err := templates["index.html"].Execute(w, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func Help(w http.ResponseWriter, r *http.Request) {
+	err := templates["help.html"].Execute(w, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func About(w http.ResponseWriter, r *http.Request) {
+	err := templates["about.html"].Execute(w, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func notFound(w http.ResponseWriter, r *http.Request) {
+	err := templates["404.html"].Execute(w, nil)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func Debug(w http.ResponseWriter, r *http.Request) {
@@ -153,7 +189,10 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		log.Infof("Bad Start page: %v", vars["CardId"])
-		http.ServeFile(w, r, root+"/bad-card.html")
+		err = templates["bad-cards.html"].Execute(w, nil)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }
 
@@ -192,11 +231,37 @@ func main() {
 
 	store.Options.Domain = *domain
 
+	tpls := template.Must(template.ParseGlob("internal_pages/templates/*")) // TODO: Replace Magic
+	nameList, err := filepath.Glob("internal_pages/*.html")
+	if err != nil {
+		panic(err)
+	}
+	for _, name := range nameList {
+		log.Debugf("Reading %s", name)
+		key := filepath.Base(name)
+		t, _ := tpls.Clone()
+		templates[key] = t
+		_, err = templates[key].ParseFiles(name)
+		if err != nil {
+			panic(err)
+		}
+	}
+
 	r := mux.NewRouter()
 	r.HandleFunc("/start/{CardId}", Start)
 	r.HandleFunc("/cardlogin/{CardId}", CardLogin)
 	r.HandleFunc("/logout", Logout)
 	r.HandleFunc("/debug", Debug)
+
+	r.HandleFunc("/", Index)
+	r.HandleFunc("/about", About)
+	r.HandleFunc("/help", Help)
+
+	r.NotFoundHandler = http.HandlerFunc(notFound)
+
+	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("img"))))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
+	http.Handle("/vendor/", http.StripPrefix("/vendor/", http.FileServer(http.Dir("vendor"))))
 
 	http.Handle("/", r)
 	log.Infof("Ready, listening on port %d", *port)
