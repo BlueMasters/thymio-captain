@@ -18,16 +18,35 @@
      */
     angular
         .module( 'thymioCaptain.admin' )
-        .filter( 'robotsFilter', robotsFilter );
+        .filter( 'robotsFilter', robotsFilter )
+        .filter( 'cardid', cardIdFilter );
 
-    // --------------------------
+    // ----------------------------------------------------
+
+    function cardIdFilter(){
+
+        // usage:
+        // cardId = "0123456789ABC"
+        // {{ cardId | cardid }}  => 012...ABC
+        // {{ cardId | cardid:2 }}  => 01...bC
+        // {{ cardId | cardid:200 }}  => 0123456789ABC
+        return function( cardid, nbr ){
+
+            var n = nbr || 3;
+            return cardid && cardid.length > 3 + (n * 2) ?
+            cardid.substr( 0, n ) + "..." + cardid.substr( -n ) : cardid;
+
+        }
+    }
+
+    // ----------------------------------------------------
 
     function robotsFilter(){
 
         return function( input, filterType ){
 
             var filtered = [];
-            if(!filterType) return input;
+            if( !filterType ) return input;
 
             switch( filterType ){
 

@@ -40,7 +40,7 @@
         <thead>
         <tr>
             <th class="mdl-data-table__cell--non-numeric">Robot</th>
-            <th class="mdl-data-table__cell--non-numeric">URL</th>
+            <!--<th class="mdl-data-table__cell&#45;&#45;non-numeric">URL</th>-->
             <th class="mdl-data-table__cell--non-numeric">CardId</th>
             <th class="mdl-data-table__cell--non-numeric"></th>
         </tr>
@@ -49,8 +49,8 @@
         <tr ng-repeat="r in ctrl.robots | robotsFilter: robotsFilter"
             ng-class="{current: r.url == ctrl.currentRobotUrl}">
             <td class="mdl-data-table__cell--non-numeric">{{r.name}}</td>
-            <td class="mdl-data-table__cell--non-numeric ttfamily url-col">{{r.url}}</td>
-            <td class="mdl-data-table__cell--non-numeric">{{r.cardId}}</td>
+            <!--<td class="mdl-data-table__cell&#45;&#45;non-numeric ttfamily url-col">{{r.url}}</td>-->
+            <td class="mdl-data-table__cell--non-numeric">{{r.cardId | cardid }}</td>
             <td class="mdl-data-table__cell--non-numeric">
                 <!-- associate/dissociate -->
                 <button id="dissBtn" ng-show="r.cardId" title="dissociate the thymio" ng-click="ctrl.dissociate(r)"
