@@ -38,6 +38,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 const (
@@ -198,7 +199,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		}
 		f, err := os.Open(fileName)
 		if err == nil {
-			http.ServeContent(w, r, fileName, 0, f)
+			http.ServeContent(w, r, fileName, time.Time{}, f)
 		} else {
 			log.Error(err.Error())
 			http.Error(w, err.Error(), http.StatusInternalServerError)
