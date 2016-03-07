@@ -36,17 +36,18 @@ import (
 	"gopkg.in/mgo.v2"
 	"html/template"
 	"net/http"
+	"os"
 	"path/filepath"
 )
 
 const (
-	dbName        = "thymio_captain"
-	sessionC      = "sessions"
-	maxAge        = 24 * 3600
-	sessionKey    = "session-key"
-	root          = "internal_pages"
-	TOKEN_RND_LEN = 20
-	TOKEN_SIG_LEN = 20
+	dbName       = "thymio_captain"
+	sessionC     = "sessions"
+	maxAge       = 24 * 3600
+	sessionKey   = "session-key"
+	root         = "internal_pages"
+	tokenRndLen  = 20
+	tokenSignLen = 20
 )
 
 var (
@@ -66,6 +67,7 @@ func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string
 		log.Error(err.Error())
 		http.Error(w, "Session Error", 500)
 	} else {
+		log.Debug("Session OK")
 		w.Header().Set("Cache-Control", "max-age=0, no-cache, no-store")
 		w.Header().Set("Pragma", "no-cache")
 	}
@@ -78,12 +80,12 @@ func isValidToken(token string, key string) bool {
 		return false
 	}
 
-	if len(t) != TOKEN_RND_LEN+TOKEN_SIG_LEN {
+	if len(t) != tokenRndLen+tokenSignLen {
 		log.Infof("Invalid token length: %d", len(t))
 		return false
 	}
-	data := t[0:TOKEN_RND_LEN]
-	sig := t[TOKEN_RND_LEN : TOKEN_RND_LEN+TOKEN_SIG_LEN]
+	data := t[0:tokenRndLen]
+	sig := t[tokenRndLen : tokenRndLen+tokenSignLen]
 	mac := hmac.New(sha1.New, []byte(key))
 	mac.Write(data)
 	log.Debugf("HMAC: %v", mac.Sum(nil))
@@ -185,12 +187,21 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		session.Values["cardId"] = vars["CardId"]
 		sessions.Save(r, w)
 
+		var fileName string
+
 		if session.Values["admin"] == "1" {
 			log.Debug("Sending Admin UI")
-			http.ServeFile(w, r, root+"/admin.html")
+			fileName = root + "/admin.html"
 		} else {
 			log.Debug("Sending User UI")
-			http.ServeFile(w, r, root+"/public.html")
+			fileName = root + "/public.html"
+		}
+		f, err := os.Open(fileName)
+		if err == nil {
+			http.ServeContent(w, r, fileName, 0, f)
+		} else {
+			log.Error(err.Error())
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	} else {
 		log.Infof("Bad Start page: %v", vars["CardId"])
