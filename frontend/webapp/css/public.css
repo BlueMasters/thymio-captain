@@ -5,6 +5,10 @@ body {
     margin: 10px;
 }
 
+h1, h2, h3 {
+    font-family: "Roboto";
+}
+
 select {
     font-family: inherit;
     background-color: transparent;
@@ -125,9 +129,9 @@ select:focus {
     bottom: 20px;
 }
 
-#notesArea{
-   width: 80%;
-    margin:20px;
+#notesArea {
+    width: 80%;
+    margin: 20px;
 }
 
 #drop {
@@ -175,7 +179,17 @@ select:focus {
  * dialog
  * ****************************************************************/
 
-#runDialogContent button {
+.run-error-icon i {
+    font-size: 5em;
+}
+
+.run-error-icon {
+    display: block;
+    text-align: center;
+    color: darkred;
+}
+
+.run-btn {
     margin: 20px auto;
     width: 60%;
     height: 50px;
