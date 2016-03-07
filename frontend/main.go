@@ -40,11 +40,13 @@ import (
 )
 
 const (
-	dbName     = "thymio_captain"
-	sessionC   = "sessions"
-	maxAge     = 24 * 3600
-	sessionKey = "session-key"
-	root       = "internal_pages"
+	dbName        = "thymio_captain"
+	sessionC      = "sessions"
+	maxAge        = 24 * 3600
+	sessionKey    = "session-key"
+	root          = "internal_pages"
+	TOKEN_RND_LEN = 20
+	TOKEN_SIG_LEN = 20
 )
 
 var (
@@ -59,6 +61,7 @@ func initSession(w http.ResponseWriter, r *http.Request) (vars map[string]string
 	database.Refresh()
 	vars = mux.Vars(r)
 	session, err = store.Get(r, sessionKey)
+	log.Debugf("Session ID = %v", session.ID)
 	if err != nil {
 		log.Error(err.Error())
 		http.Error(w, "Session Error", 500)
@@ -75,12 +78,12 @@ func isValidToken(token string, key string) bool {
 		return false
 	}
 
-	if len(t) != 40 { // TODO: replace MAGIC
+	if len(t) != TOKEN_RND_LEN+TOKEN_SIG_LEN {
 		log.Infof("Invalid token length: %d", len(t))
 		return false
 	}
-	data := t[0:20] // TODO: replace MAGIC
-	sig := t[20:40] // TODO: replace MAGIC
+	data := t[0:TOKEN_RND_LEN]
+	sig := t[TOKEN_RND_LEN : TOKEN_RND_LEN+TOKEN_SIG_LEN]
 	mac := hmac.New(sha1.New, []byte(key))
 	mac.Write(data)
 	log.Debugf("HMAC: %v", mac.Sum(nil))
@@ -183,8 +186,10 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		sessions.Save(r, w)
 
 		if session.Values["admin"] == "1" {
+			log.Debug("Sending Admin UI")
 			http.ServeFile(w, r, root+"/admin.html")
 		} else {
+			log.Debug("Sending User UI")
 			http.ServeFile(w, r, root+"/public.html")
 		}
 	} else {
@@ -231,7 +236,7 @@ func main() {
 
 	store.Options.Domain = *domain
 
-	tpls := template.Must(template.ParseGlob("internal_pages/templates/*")) // TODO: Replace Magic
+	tpls := template.Must(template.ParseGlob("internal_pages/templates/*"))
 	nameList, err := filepath.Glob("internal_pages/*.html")
 	if err != nil {
 		panic(err)
