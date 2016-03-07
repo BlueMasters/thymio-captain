@@ -161,7 +161,12 @@
 
         function uploadProgram(){
             if( $rootScope.program.length == 0 ){
-                showMessageDialog( "Pas de programme", "Il faut d'abord que tu écrives un programme... " );
+                ModalService.showModal({
+                    framework: "mdl",
+                    title: "Pas de programme",
+                    text: "Il faut d'abord que tu écrives un programme...",
+                    cancelable: true
+                });
             }else{
                 if( self.progState != 0 ){
                     // save prog before upload
@@ -183,8 +188,13 @@
         function _uploadProgram(){
             RestService.upload( self.cardIdParam, showRunStopDialog,
                 function(){
-                    showMessageDialog( "Pas de Thymio", "Tu n'as pas encore de Thymio attribué. Demande de l'aide à un" +
-                        " animateur et réessaie." );
+                    ModalService.showModal({
+                        framework: "mdl",
+                        title: "Pas de Thymio",
+                        text: "Tu n'as pas encore de Thymio attribué. Demande de l'aide à un" +
+                        " animateur et réessaie.",
+                        cancelable: true
+                    });
                 } );
         }
 
@@ -198,16 +208,6 @@
 
 
         //##------------ dialogs and toasts
-
-        function showMessageDialog( title, msg ){
-            showDialog( {
-                title   : title,
-                text    : msg,
-                positive: {
-                    title: 'Ok'
-                }
-            } );
-        }
 
         function showRunStopDialog(){
             ModalService.showModal( {
