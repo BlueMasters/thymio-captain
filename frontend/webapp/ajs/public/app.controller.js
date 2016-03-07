@@ -56,6 +56,7 @@
 
         self.dial = showRunStopDialog;
 
+
         self.contentLoaded = updateMdl;
 
         /* *****************************************************************
@@ -161,12 +162,7 @@
 
         function uploadProgram(){
             if( $rootScope.program.length == 0 ){
-                ModalService.showModal({
-                    framework: "mdl",
-                    title: "Pas de programme",
-                    text: "Il faut d'abord que tu écrives un programme...",
-                    cancelable: true
-                });
+                showMessageDialog( "Pas de programme", "Il faut d'abord que tu écrives un programme... " );
             }else{
                 if( self.progState != 0 ){
                     // save prog before upload
@@ -185,37 +181,67 @@
             }
         }
 
+
         function _uploadProgram(){
+
+            ModalService.showModal({
+                framework: "mdl",
+                html: "<div class='align-center'><image src='/vendor/loading.gif' /></div>",
+                cancelable: false
+            });
+
             RestService.upload( self.cardIdParam, showRunStopDialog,
                 function(){
-                    ModalService.showModal({
-                        framework: "mdl",
-                        title: "Pas de Thymio",
-                        text: "Tu n'as pas encore de Thymio attribué. Demande de l'aide à un" +
-                        " animateur et réessaie.",
-                        cancelable: true
-                    });
+                    ModalService.close();
+                    showMessageDialog( "Pas de Thymio", "Tu n'as pas encore de Thymio attribué. Demande de l'aide à un" +
+                        " animateur et réessaie." );
                 } );
         }
 
         function runProgram(){
-            RestService.run( self.cardIdParam, _log, _log );
+            RestService.run( self.cardIdParam, runStopError, runStopError );
         }
 
         function stopProgram(){
-            RestService.stop( self.cardIdParam, _log, _log );
+            RestService.stop( self.cardIdParam, runStopError, runStopError );
+        }
+
+        function runStopError(){
+            ModalService.showModal( {
+                    framework  : "mdl",
+                    html      : '<p class="run-error-icon"><i class="material-icons">error_outline</i></p><div class="align-center">Il semble que le robot ne répond' +
+                    ' plus...</div>',
+                    cancelable: true
+                }
+            );
         }
 
 
         //##------------ dialogs and toasts
 
+        function showMessageDialog( title, msg ){
+            showDialog( {
+                title   : title,
+                text    : msg,
+                positive: {
+                    title: 'Ok'
+                }
+            } );
+        }
+
         function showRunStopDialog(){
             ModalService.showModal( {
-                templateUrl: 'runDialogTemplate.html',
-                controller : "DefaultModalController",
-                inputs     : {
-                    attrs: {run: runProgram, stop: stopProgram}
-                }
+                framework: "mdl",
+                title    : "Ton robot est prêt!",
+                html     : '<div class="align-center"><p>Utilise les boutons suivants pour le contrôler:</p>' +
+                '<div><button class="run-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"ng-click="inputs.run();">vas-y !</button></div>' +
+                '<div><button class="run-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"ng-click="inputs.stop();">arrête.</button></div>' +
+                '</div>',
+                inputs   : {
+                    run : runProgram,
+                    stop: stopProgram
+                },
+                positive : "fermer"
 
             } );
         }
@@ -258,6 +284,7 @@
      * modal
      * ****************************************************************/
 
-    function ModalCtrl(){}
+    function ModalCtrl(){
+    }
 
 }());
