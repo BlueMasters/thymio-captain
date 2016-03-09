@@ -6,7 +6,7 @@ dx  = 20;   // holes/notch spacing
 
 nh = 6;     // number of holes
 hx = 8;     // hole width
-lw = 0.02;  // laser width
+lw = 0.01;  // laser width
 
 bar_len    = 150;
 bar_width  =  40;
@@ -43,11 +43,11 @@ module top(bx) {
         }
         union() {
             for (i = [0:nh]) {
-                translate([x0+i*dx,-lw,0]) {
-                    square(size = [hx+2*lw, w+2*lw]);
+                translate([x0+i*dx+lw,-lw,0]) {
+                    square(size = [hx-lw, w+2*lw]);
                 }
-                translate([x0+i*dx,bar_width-w-lw,0]) {
-                    square(size = [hx+2*lw, w+2*lw]);
+                translate([x0+i*dx+lw,bar_width-w+lw,0]) {
+                    square(size = [hx-lw, w+2*lw]);
                 }
             }
         }
@@ -58,23 +58,23 @@ module side() {
     union() {
         square(size = [bar_len, bar_height]);
         for (i = [0:nh]) {
-            translate([x0+i*dx,-w-lw,0]) {
-                square(size = [hx-2*lw, w+2*lw]);
+            translate([x0+i*dx,-w-2*lw,0]) {
+                square(size = [hx+lw, w+2*lw]);
             }
-            translate([x0+i*dx,bar_height-lw,0]) {
-                square(size = [hx-2*lw, w+2*lw]);
+            translate([x0+i*dx,bar_height-2*lw,0]) {
+                square(size = [hx+lw, w+2*lw]);
             }
         }
     }
 }
 
 top(true);
-translate([0, -42, 0]) {
+translate([0, -41, 0]) {
     top(false);
 }
-translate([0, -108, 0]) {
+translate([0, -106, 0]) {
     side();
 }
-translate([0, -178, 0]) {
+translate([0, -175, 0]) {
     side();
 }
