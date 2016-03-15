@@ -3,10 +3,14 @@
 
 <div class="mdl-grid">
     <!-- left column -->
-    <h2>Ton programme</h2>
-    <!--notes Textfield -->
-    <div id="notesArea" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        <textarea class="mdl-textfield__input" id="notes" type="text" ro ws="2"
+    <div class="mdl-cell mdl-cell--5-col mdl-cell--4-col-tablet grid-left align-center"
+         data-as-sortable="ctrl.actionsDdConfig"
+         data-ng-model="ctrl.actions">
+        <!--as-sortable-->
+    	<h2>Ton programme</h2>
+    	<!--notes Textfield -->
+    	<div id="notesArea" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        	<textarea class="mdl-textfield__input" id="notes" type="text" ro ws="2"
 		          ng-model="ctrl.notes"></textarea>
 	    <label class="mdl-textfield__label" for="notes">tes notes sur le programme</label>
 	</div>
@@ -40,10 +44,7 @@
 		<i class="material-icons">redo</i>
 	    </button>
 	</div>
-    <div class="mdl-cell mdl-cell--5-col mdl-cell--4-col-tablet grid-left align-center"
-         data-as-sortable="ctrl.actionsDdConfig"
-         data-ng-model="ctrl.actions">
-        <!--as-sortable-->
+    
         <div data-ng-repeat="i in ctrl.actions" data-as-sortable-item
              class="action_card mdl-shadow--6dp" style="border: 1px solid {{i.color()}};">
             <!-- card -->
