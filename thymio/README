@@ -1,0 +1,4 @@
+Avant de lancer le script install.sh:
+	- Vérifier que les deux script (install.sh et compile_aseba.sh) soient exécutables
+	- Etendre le system sur toute la carte SD (option Expand Filesystem dans raspi-config)
+	- Avoir une connexion internet

@@ -1,0 +1,102 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+<event size="1" name="eventSoundSystem"/>
+<event size="3" name="eventLedTop"/>
+<event size="2" name="eventSoundFreq"/>
+<event size="3" name="eventLedBotLeft"/>
+<event size="0" name="eventLedBotRight"/>
+<event size="2" name="eventLedTemp"/>
+<event size="1" name="eventLedSound"/>
+<event size="4" name="eventLedButton"/>
+<event size="8" name="eventLedCircle"/>
+<event size="8" name="eventLedProxH"/>
+<event size="2" name="eventLedProxV"/>
+<event size="0" name="eventReset"/>
+<event size="2" name="eventMotors"/>
+
+
+<!--list of constants-->
+
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+
+<!--node thymio-II-->
+<node nodeId="1" name="thymio-II">var start = 2
+var new_rc = 0
+timer.period[0] = 1
+
+sub reset
+	motor.left.target = 0
+	motor.right.target = 0
+	call leds.top(0,0,0)
+	call leds.bottom.right(0,0,0)
+	call leds.bottom.left(0,0,0)
+	
+onevent timer0
+	if start == 1 then
+                 call leds.buttons(0, 0, 0, 0)
+		 start = 0
+	end
+        if start == 2 then
+                 call leds.buttons(32, 32, 32, 32)
+                 timer.period[0] = 1000
+                 callsub reset
+                 start = 1
+        end
+
+# RESET EVENT 
+onevent eventReset
+	callsub reset
+	
+# MOTOR EVENTS
+onevent eventMotors
+	motor.left.target = event.args[0]
+	motor.right.target = event.args[1]
+
+# SOUND EVENTS
+onevent eventSoundSystem
+	call sound.system(event.args[0])
+	
+onevent eventSoundFreq
+	call sound.freq(event.args[0], event.args[1])
+
+# LED EVENTS
+onevent eventLedTop
+	call leds.top(event.args[0], event.args[1], event.args[2])
+	
+onevent eventLedBotLeft
+	call leds.bottom.left(event.args[0], event.args[1], event.args[2])
+	
+onevent eventLedBotRight
+	call leds.bottom.right(event.args[0], event.args[1], event.args[2])
+	
+onevent eventLedTemp
+	call leds.temperature(event.args[0], event.args[1])
+	
+onevent eventLedSound
+	call leds.sound(event.args[0])
+
+onevent eventLedButton
+	call leds.buttons(event.args[0], event.args[1], event.args[2], event.args[3])
+
+onevent eventLedCircle
+	call leds.circle(event.args[0], event.args[1], event.args[2], event.args[3], event.args[4], event.args[5], event.args[6], event.args[7])
+	
+onevent eventLedProxH
+	call leds.prox.h(event.args[0], event.args[1], event.args[2], event.args[3], event.args[4], event.args[5], event.args[6], event.args[7])
+	
+onevent eventLedProxV
+	call leds.prox.v(event.args[0], event.args[1])
+	
+onevent rc5
+	new_rc = 1
+
+</node>
+
+
+</network>
