@@ -31,7 +31,7 @@
             'ngAnimate',
             'as.sortable',
             'decipher.history',
-            'derlin.modals'
+            'ui.materialize'
         ] );
 
 }());

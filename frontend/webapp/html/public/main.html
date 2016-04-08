@@ -1,100 +1,105 @@
 <!-- ==================================== -->
 <!--main content-->
 
-<div class="mdl-grid">
-    <!-- left column -->
-    <div class="mdl-cell mdl-cell--5-col mdl-cell--4-col-tablet grid-left align-center"
-         data-as-sortable="ctrl.actionsDdConfig"
-         data-ng-model="ctrl.actions">
-        <!--as-sortable-->
-    	<h2>Ton programme</h2>
-    	<!--notes Textfield -->
-    	<div id="notesArea" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-        	<textarea class="mdl-textfield__input" id="notes" type="text" ro ws="2"
-		          ng-model="ctrl.notes"></textarea>
-	    <label class="mdl-textfield__label" for="notes">tes notes sur le programme</label>
-	</div>
-        <!-- ==================================== -->
-	<!-- buttons at the top-->
+<div class="row">
 
-	<div style="padding: 10px; margin-bottom: 10px;">
-	    <!-- save in the cloud -->
-	    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored"
-		    ng-click="ctrl.save()" ng-disabled="prog.$invalid || (ctrl.progState == 0 && !ctrl.notesDirty())">
-		<i class="material-icons">backup</i>
-	    </button>
-	    <!-- help -->
-	    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
-		    ng-click="ctrl.help()">
-		<i class="material-icons">help</i>
-	    </button>
-	    <!-- upload -->
-	    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
-		    ng-click="ctrl.upload()" ng-disabled="prog.$invalid || $root.program.length == 0">
-		<i class="material-icons">play_circle_outline</i>
-	    </button>
-	    <!-- undo -->
-	    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
-		    ng-click="ctrl.undo()" ng-disabled="!ctrl.canUndo()">
-		<i class="material-icons">undo</i>
-	    </button>
-	    <!-- redo -->
-	    <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored"
-		    ng-click="ctrl.redo()" ng-disabled="!ctrl.canRedo()">
-		<i class="material-icons">redo</i>
-	    </button>
-	</div>
-    
-        <div data-ng-repeat="i in ctrl.actions" data-as-sortable-item
-             class="action_card mdl-shadow--6dp" style="border: 1px solid {{i.color()}};">
-            <!-- card -->
-            <div data-as-sortable-item-handle class="align-center action_card-img">
-                <img src="/img/thymio/{{i.type}}.png">
-                <!--title-->
+    <!-- left column -->
+    <div class="col s6">
+        <div class="grid-left align-center"
+             data-as-sortable="ctrl.actionsDdConfig"
+             data-ng-model="ctrl.actions">
+            <!--as-sortable-->
+
+            <h2>Ton programme</h2>
+            <!--notes Textfield -->
+            <div id="notesArea" input-field>
+                <textarea ng-model="ctrl.notes" class="materialize-textarea"></textarea>
+                <label>tes notes sur le programme</label>
             </div>
-            <div class="align-center action_card-title" style="background-color: {{i.color()}}">{{i.title()}}</div>
-            <!--end card-->
+
+            <!-- ==================================== -->
+
+            <!-- buttons at the top-->
+
+            <div style="padding: 10px; margin-bottom: 10px;">
+                <!-- save in the cloud -->
+                <a class="btn btn-icon-round"
+                   ng-click="ctrl.save()" ng-disabled="prog.$invalid || (ctrl.progState == 0 && !ctrl.notesDirty())">
+                    <i class="material-icons">backup</i>
+                </a>
+                <!-- help -->
+                <a class="btn btn-icon-round"
+                   ng-click="ctrl.help()">
+                    <i class="material-icons">help</i>
+                </a>
+                <!-- upload -->
+                <a class="btn btn-icon-round"
+                   ng-click="ctrl.upload()" ng-disabled="prog.$invalid || $root.program.length == 0">
+                    <i class="material-icons">play_circle_outline</i>
+                </a>
+                <!-- undo -->
+                <a class="btn btn-icon-round"
+                   ng-click="ctrl.undo()" ng-disabled="!ctrl.canUndo()">
+                    <i class="material-icons">undo</i>
+                </a>
+                <!-- redo -->
+                <a class="btn btn-icon-round"
+                   ng-click="ctrl.redo()" ng-disabled="!ctrl.canRedo()">
+                    <i class="material-icons">redo</i>
+                </a>
+            </div>
+
+            <div data-ng-repeat="i in ctrl.actions" data-as-sortable-item
+                 class="action_card shadow-6dp" style="border: 1px solid {{i.color()}};">
+                <!-- card -->
+                <div data-as-sortable-item-handle class="align-center action_card-img">
+                    <img src="/img/thymio/{{i.type}}.png">
+                    <!--title-->
+                </div>
+                <div class="align-center action_card-title" style="background-color: {{i.color()}}">{{i.title()}}</div>
+                <!--end card-->
+            </div>
+            <!--end as-sortable-->
         </div>
-        <!--end as-sortable-->
     </div>
     <!--end left column-->
 
 
     <!-- right column -->
-    <div class="mdl-cell mdl-cell--7-col mdl-cell--4-col-tablet grid-right">
-        <!--drop container-->
-        <form name="prog" novalidate>
-            <div id="drop" data-as-sortable="ctrl.programDdConfig"
-                 data-ng-model="$root.program">
+    <div class="col s6" id="drop" data-as-sortable="ctrl.programDdConfig"
+             data-ng-model="$root.program">
+
+            <form name="prog" novalidate>
                 <!--as sortable item-->
-                <div data-ng-repeat="i in $root.program" data-as-sortable-item class="prog_card mdl-shadow--6dp"
+                <div data-ng-repeat="i in $root.program" data-as-sortable-item class="prog_card shadow-6dp"
                      style="border: 4px solid {{i.color()}}"
                      ng-class="{invalid: !i.param}">
+
                     <div class="prog_card-img" data-as-sortable-item-handle>
                         <img src="/img/thymio/{{i.type}}.png">
                     </div>
+
                     <!--select-->
                     <div class="prog_card-args">
-                        <div class="mdl-selectfield">
-                            <select ng-model="i.param" required>
-                                <option style="color:gray" value="" selected disabled hidden>configurer...</option>
-                                <option ng-repeat="option in i.args()"
-                                        value="{{option.id}}">{{option.descr}}
-                                </option>
-                            </select>
-                        </div>
+                        <select ng-model="i.param" material-select watch>
+                            <option style="color:gray" value="" selected disabled hidden>configurer...</option>
+                            <option ng-repeat="option in i.args()"
+                                    value="{{option.id}}">{{option.descr}}
+                            </option>
+                        </select>
                     </div>
+
                     <!--delete icon-->
                     <div class="prog_card-icons">
-                        <button class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect"
-                                ng-click="$root.program.splice($index,1); $event.stopPropagation();">
+                        <a class="btn btn-icon-round"
+                           ng-click="$root.program.splice($index,1); $event.stopPropagation();">
                             <i class="material-icons">delete</i>
-                        </button>
+                        </a>
                     </div>
                 </div>
                 <!--end sortable item-->
-            </div>
-        </form>
+            </form>
+        </div>
         <!--end drop container-->
     </div>
     <!--end right column-->
