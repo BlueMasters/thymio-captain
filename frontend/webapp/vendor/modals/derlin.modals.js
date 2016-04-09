@@ -147,7 +147,7 @@
                         var opt = options.cancelable ? {keyboard: true} : {keyboard: false, backdrop: "static"};
                         modalElement.modal( opt );
 
-                    }else{
+                    }else if(options.framework == "mdl"){
                         componentHandler.upgradeDom();
                     }
 

@@ -228,12 +228,7 @@
         }
 
         function showToast( message ){
-            $( '.mdl-js-snackbar' )[0].MaterialSnackbar.showSnackbar(
-                {
-                    message: message,
-                    timeout: 2000
-                }
-            );
+            Materialize.toast(message, 3000);
         }
 
         //##------------ utils

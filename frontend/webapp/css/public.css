@@ -101,6 +101,7 @@ textarea.materialize-textarea {
 .prog_card-img {
     padding: 10px 0;
     width: 11%;
+    vertical-align: middle;
 }
 
 .prog_card-img img {
@@ -130,6 +131,11 @@ textarea.materialize-textarea {
     background: white;
     border: 1px solid transparent;
     padding: 4px 13px;
+    border-radius: 3px;
+}
+
+.dm-footer button:hover {
+    background: #eee;
 }
 
 /*====== general ======== */
@@ -154,12 +160,13 @@ h1, h2, h3 {
 
 #drop {
     min-height: 300px;
+    padding-bottom: 200px;
     border: 1px solid #ddd;
     background-color: #f0f0f0;
     /*padding: 20px;*/
     /*padding-bottom: 60px;*/
     /*position: absolute;*/
-    overflow-y: auto;
+    /*overflow-y: auto;*/
 }
 
 
