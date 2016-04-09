@@ -22,7 +22,7 @@
 
     // --------------------------
 
-    function MainCtrl( $rootScope, RestService, Action, History ){
+    function MainCtrl( $rootScope, ModalService, RestService, Action, History ){
 
         var self = this;
 
@@ -149,12 +149,11 @@
 
         function uploadProgram(){
             if( $rootScope.program.length == 0 ){
-                //ModalService.showModal( {
-                //    framework: "mdl",
-                //    title: "Pas de programme",
-                //    text:"Il faut d'abord que tu écrives un programme... ",
-                //    cancelable: true
-            //});
+                ModalService.showModal( {
+                    title: "Pas de programme",
+                    text:"Il faut d'abord que tu écrives un programme... ",
+                    cancelable: true
+            });
             }else{
                 if( self.progState != 0 ){
                     // save prog before upload
@@ -176,20 +175,18 @@
 
         function _uploadProgram(){
 
-            //ModalService.showModal({
-            //    framework: "mdl",
-            //    html: "<div class='align-center'><image src='/vendor/loading.gif' /></div>",
-            //    cancelable: false
-            //});
+            ModalService.showModal({
+                html: "<div class='align-center'><image src='/vendor/loading.gif' /></div>",
+                cancelable: false
+            });
 
             RestService.upload( self.cardIdParam, showRunStopDialog,
                 function(){
-                    //ModalService.showModal({
-                    //    framework:"mdl",
-                    //    title: "Pas de Thymio",
-                    //    text:"Tu n'as pas encore de Thymio attribué. Demande de l'aide à un" +
-                    //    " animateur et réessaie.",
-                    //    cancelable:true });
+                    ModalService.showModal({
+                        title: "Pas de Thymio",
+                        text:"Tu n'as pas encore de Thymio attribué. Demande de l'aide à un" +
+                        " animateur et réessaie.",
+                        cancelable:true });
                 } );
         }
 
@@ -202,13 +199,12 @@
         }
 
         function runStopError(){
-            //ModalService.showModal( {
-            //        framework  : "mdl",
-            //        html      : '<p class="run-error-icon"><i class="material-icons">error_outline</i></p><div class="align-center">Il semble que le robot ne répond' +
-            //        ' plus...</div>',
-            //        cancelable: true
-            //    }
-            //);
+            ModalService.showModal( {
+                    html      : '<p class="run-error-icon"><i class="material-icons">error_outline</i></p><div class="align-center">Il semble que le robot ne répond' +
+                    ' plus...</div>',
+                    cancelable: true
+                }
+            );
         }
 
 
@@ -216,20 +212,19 @@
 
 
         function showRunStopDialog(){
-            //ModalService.showModal( {
-            //    framework: "mdl",
-            //    title    : "Ton robot est prêt!",
-            //    html     : '<div class="align-center"><p>Utilise les boutons suivants pour le contrôler:</p>' +
-            //    '<div><button class="run-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"ng-click="inputs.run();">vas-y !</button></div>' +
-            //    '<div><button class="run-btn mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"ng-click="inputs.stop();">arrête.</button></div>' +
-            //    '</div>',
-            //    inputs   : {
-            //        run : runProgram,
-            //        stop: stopProgram
-            //    },
-            //    positive : "fermer"
-            //
-            //} );
+            ModalService.showModal( {
+                title    : "Ton robot est prêt!",
+                html     : '<div class="align-center"><p>Utilise les boutons suivants pour le contrôler:</p>' +
+                '<div><a class="run-btn btn waves-effect"ng-click="inputs.run();">vas-y !</a></div>' +
+                '<div><a class="run-btn btn waves-effect" ng-click="inputs.stop();">arrête.</a></div>' +
+                '</div>',
+                inputs   : {
+                    run : runProgram,
+                    stop: stopProgram
+                },
+                positive : "fermer"
+
+            } );
         }
 
         function showToast( message ){

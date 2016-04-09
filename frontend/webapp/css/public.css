@@ -119,6 +119,19 @@ textarea.materialize-textarea {
     margin: 20px auto;
 }
 
+/*====== modals ======== */
+
+.run-btn {
+    font-weight: bold;
+    line-height: 50px;
+}
+
+.dm-footer button {
+    background: white;
+    border: 1px solid transparent;
+    padding: 4px 13px;
+}
+
 /*====== general ======== */
 
 
@@ -131,6 +144,9 @@ h1, h2, h3 {
 .align-center {
     text-align: center;
 }
+
+
+
 /*=================================== end new*/
 
 /* ==========  grid-right ========== */
