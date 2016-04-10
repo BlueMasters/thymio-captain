@@ -104,8 +104,8 @@
         //##------------ drag and drop
 
         self.actionsDdConfig = {
-            containment: 'body',
-            clone      : true
+            allowDuplicates: false,
+            clone: true
         };
 
         self.programDdConfig = {
