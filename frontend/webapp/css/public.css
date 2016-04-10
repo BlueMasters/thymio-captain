@@ -2,6 +2,29 @@
 
 /*===================================new*/
 
+/*====== containers agencement ======== */
+
+/* left column: fixed */
+#pushpin {
+    width: 46%;
+    margin: 2% 0 2% 2%;
+}
+
+/*right column*/
+#program {
+    width: 46%;
+    margin: 2% 2% 2% 50%;
+    /*either float: right or margin-right 50%*/
+    /*float: right;*/
+}
+
+#drop {
+    min-height: 300px;
+    padding: 20px 10px 200px 10px;
+    /*background: rgba(43, 187, 173, .05);*/
+    background: rgba(0, 0, 0, .05);
+}
+
 /*====== material fixes ======== */
 
 /*round icon buttons*/
@@ -10,7 +33,6 @@
     font-size: 24px;
     height: 56px;
     margin: auto;
-    min-width: 56px;
     width: 56px;
     padding: 0;
     position: relative;
@@ -25,6 +47,43 @@
     line-height: 24px;
     width: 24px;
     font-size: 24px;
+}
+
+/*round icon buttons -- SMALL */
+.btn.btn-icon-round.small {
+    font-size: 18px;
+    height: 42px;
+    margin: auto;
+    width: 42px;
+    padding: 0;
+    position: relative;
+}
+
+.btn.btn-icon-round.small .material-icons {
+    -webkit-transform: translate(-9px, -9px);
+    transform: translate(-9px, -9px);
+    line-height: 18px;
+    width: 18px;
+    font-size: 18px;
+}
+
+@media screen and (max-width: 1000px) {
+    .btn.btn-icon-round.small {
+        font-size: 12px;
+        height: 28px;
+        margin: auto;
+        width: 28px;
+        padding: 0;
+        position: relative;
+    }
+
+    .btn.btn-icon-round.small .material-icons {
+        -webkit-transform: translate(-6px, -6px);
+        transform: translate(-6px, -6px);
+        line-height: 12px;
+        width: 12px;
+        font-size: 12px;
+    }
 }
 
 /*textarea: remove huge spacing when empty */
@@ -81,7 +140,6 @@ textarea.materialize-textarea {
 
 /* ==========  prog cards ========== */
 
-
 /*prog card*/
 .prog_card {
     margin: 10px;
@@ -125,6 +183,9 @@ textarea.materialize-textarea {
 .run-btn {
     font-weight: bold;
     line-height: 50px;
+    margin: 20px auto;
+    width: 60%;
+    height: 50px;
 }
 
 .dm-footer button {
@@ -138,42 +199,6 @@ textarea.materialize-textarea {
     background: #eee;
 }
 
-/*====== general ======== */
-
-
-/*title*/
-h1, h2, h3 {
-    font-family: 'Lato', sans-serif;
-}
-
-/*utils*/
-.align-center {
-    text-align: center;
-}
-
-
-
-/*=================================== end new*/
-
-/* ==========  grid-right ========== */
-
-
-#drop {
-    min-height: 300px;
-    padding-bottom: 200px;
-    border: 1px solid #ddd;
-    background-color: #f0f0f0;
-    /*padding: 20px;*/
-    /*padding-bottom: 60px;*/
-    /*position: absolute;*/
-    /*overflow-y: auto;*/
-}
-
-
-/* *****************************************************************
- * dialog
- * ****************************************************************/
-
 .run-error-icon i {
     font-size: 5em;
 }
@@ -184,8 +209,14 @@ h1, h2, h3 {
     color: darkred;
 }
 
-.run-btn {
-    margin: 20px auto;
-    width: 60%;
-    height: 50px;
+/*====== general ======== */
+
+/*title*/
+h1, h2, h3 {
+    font-family: 'Lato', sans-serif;
+}
+
+/*utils*/
+.align-center {
+    text-align: center;
 }
