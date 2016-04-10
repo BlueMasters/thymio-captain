@@ -223,6 +223,11 @@ textarea.materialize-textarea {
 
 html {
     line-height: 1;
+    /*make things not selectable by default to
+     avoid the ugly "selected" color  */
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
 }
 
 /*title*/
