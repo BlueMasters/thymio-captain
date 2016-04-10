@@ -49,32 +49,43 @@
     font-size: 24px;
 }
 
-/*round icon buttons -- SMALL */
-.btn.btn-icon-round.small {
-    font-size: 18px;
-    height: 42px;
-    margin: auto;
-    width: 42px;
-    padding: 0;
-    position: relative;
+@media screen and (max-width: 1000px){
+
+    .btn.btn-icon-round {
+        font-size: 18px;
+        height: 42px;
+        width: 42px;
+    }
+
+    .btn.btn-icon-round .material-icons {
+        -webkit-transform: translate(-9px, -9px);
+        transform: translate(-9px, -9px);
+        line-height: 18px;
+        width: 18px;
+        font-size: 18px;
+    }
 }
 
-.btn.btn-icon-round.small .material-icons {
-    -webkit-transform: translate(-9px, -9px);
-    transform: translate(-9px, -9px);
-    line-height: 18px;
-    width: 18px;
-    font-size: 18px;
-}
+/*round icon buttons -- SMALL */
+/*.btn.btn-icon-round.small {*/
+    /*font-size: 18px;*/
+    /*height: 42px;*/
+    /*width: 42px;*/
+/*}*/
+
+/*.btn.btn-icon-round.small .material-icons {*/
+    /*-webkit-transform: translate(-9px, -9px);*/
+    /*transform: translate(-9px, -9px);*/
+    /*line-height: 18px;*/
+    /*width: 18px;*/
+    /*font-size: 18px;*/
+/*}*/
 
 @media screen and (max-width: 1000px) {
     .btn.btn-icon-round.small {
         font-size: 12px;
         height: 28px;
-        margin: auto;
         width: 28px;
-        padding: 0;
-        position: relative;
     }
 
     .btn.btn-icon-round.small .material-icons {
@@ -108,7 +119,7 @@ textarea.materialize-textarea {
     display: inline-block;
     margin: 1%;
     background: white;
-    max-width: 27%;
+    width: 27%;
 }
 
 .action_card .action_card-img {
@@ -124,7 +135,6 @@ textarea.materialize-textarea {
     padding: 10px;
     font-weight: bold;
     color: white;
-    font-size: 1.2em;
 }
 
 /* ==========  dragged ========== */
@@ -175,7 +185,7 @@ textarea.materialize-textarea {
 /*notes area*/
 #notesArea {
     width: 80%;
-    margin: 20px auto;
+    margin: 2px auto;
 }
 
 /*====== modals ======== */
@@ -211,9 +221,20 @@ textarea.materialize-textarea {
 
 /*====== general ======== */
 
+html {
+    line-height: 1;
+}
+
 /*title*/
 h1, h2, h3 {
-    font-family: 'Lato', sans-serif;
+    font-family: 'Roboto', sans-serif;
+}
+
+
+h1.title {
+   font-size: 1.3em;
+    font-weight: bold;
+    margin: 5px;
 }
 
 /*utils*/
