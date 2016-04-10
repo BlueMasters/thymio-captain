@@ -104,12 +104,12 @@
         //##------------ drag and drop
 
         self.actionsDdConfig = {
-            containment: '.grid-right',
+            containment: 'body',
             clone      : true
         };
 
         self.programDdConfig = {
-            containment    : 'body',
+            containment: '#drop',
             allowDuplicates: true
         };
 
