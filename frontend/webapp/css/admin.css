@@ -9,36 +9,72 @@
 /* *****************************************************************
  * layout
  * ****************************************************************/
-.admin-ribbon {
-    width: 100%;
-    height: 40vh;
-    background-color: #3F51B5;
-    flex-shrink: 0;
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
 }
 
-.admin-main {
-    margin-top: -35vh;
-    flex-shrink: 0;
+main {
+    flex: 1 0 auto;
 }
 
-.admin-header .mdl-layout__header-row {
-    padding-left: 40px;
+/* --- footer*/
+
+footer.page-footer {
+    display: flex;
+    background: rgb(66, 66, 66);
+    color: rgb(158, 158, 158);
+    text-align: center;
+    justify-content: space-between;
+    padding: 32px 16px;
 }
 
-.admin-container {
-    max-width: 1600px;
-    width: calc(100% - 16px);
-    margin: 0 auto;
+.thymio-center-links {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.admin-content {
-    border-radius: 2px;
-    padding: 80px 56px;
-    margin-bottom: 80px;
+footer ul li {
+    display: inline;
 }
 
-.admin-layout.is-small-screen .admin-content {
-    padding: 40px 28px;
+footer a {
+    color: inherit;
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+/* --- header*/
+
+header {
+    display: flex;
+    background: rgb(33, 150, 243);
+    text-align: center;
+    color: white;
+}
+
+header h1 {
+    color: white;
+    /*font-size: 10vw;*/
+    font-size: 56px;
+}
+
+img.heiafr-logo {
+    width: 700px;
+}
+
+/*small screen*/
+@media screen and (max-width: 1000px ) {
+
+    img.heiafr-logo {
+        width: 300px;
+    }
+    header h1 {
+        font-size: 42px;
+    }
 }
 
 /* *****************************************************************
