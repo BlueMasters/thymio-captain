@@ -10,6 +10,6 @@
 (function(){
     angular
         .module( 'thymioCaptain.rest' )
-        .constant( 'baseUrl', 'http://localhost:3000/api/' );
-        //.constant( 'baseUrl', 'https://api.thymio.tk/v1/' );
+        //.constant( 'baseUrl', 'http://localhost:3000/api/' );
+        .constant( 'baseUrl', 'https://api.thymio.tk/v1/' );
 }());
