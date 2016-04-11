@@ -16,23 +16,25 @@
 <hr/>
 <div class="align-center">
 
-    <div class="padded">
-        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio-all"
-               ng-init="robotsFilter=''">
-            <input type="radio" id="radio-all" name="robotsFilter" class="mdl-radio__button" ng-model="robotsFilter"
+    <div class="padded" id="radios-container" ng-init="robotsFilter=''">
+
+        <div>
+            <input type="radio" id="radio-all" name="robotsFilter" class="with-gap" ng-model="robotsFilter"
                    value="" checked>
-            <span class="mdl-radio__label">All</span>
-        </label>
-        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio-used">
-            <input type="radio" id="radio-used" name="robotsFilter" class="mdl-radio__button"
-                   ng-model="robotsFilter" value="used">
-            <span class="mdl-radio__label">Used only</span>
-        </label>
-        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio-free">
-            <input type="radio" id="radio-free" name="robotsFilter" class="mdl-radio__button" ng-model="robotsFilter"
+            <label for="radio-all">All</label>
+        </div>
+
+        <div>
+            <input type="radio" id="radio-used" name="robotsFilter" class="with-gap"
+                    ng-model="robotsFilter" value="used">
+            <label for="radio-used">Used only</label>
+        </div>
+
+        <div>
+            <input type="radio" id="radio-free" name="robotsFilter" class="with-gap" ng-model="robotsFilter"
                    value="free">
-            <span class="mdl-radio__label">Free only</span>
-        </label>
+            <label for="radio-free">Free only</label>
+        </div>
     </div>
 
     <!--table of associations-->

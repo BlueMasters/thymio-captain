@@ -121,7 +121,8 @@ thead th {
 
 /*add padding to the cells*/
 #assoc-table td, #assoc-table th {
-    padding: 5px 20px;
+    padding: 5px;
+    text-align: center;
 }
 
 /*shrink the assoc table*/
@@ -149,4 +150,12 @@ table tr.current {
 
 table tr.current:hover {
     background-color: rgba(63, 81, 181, 0.5) !important;
+}
+
+/* *****************************************************************
+ * other
+ * ****************************************************************/
+#radios-container div {
+   display: inline-block;
+   margin: 20px 10px;
 }
