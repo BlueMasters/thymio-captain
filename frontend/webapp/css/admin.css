@@ -113,19 +113,36 @@ img.heiafr-logo {
 /* *****************************************************************
  * tables
  * ****************************************************************/
-.mdl-data-table {
-    white-space: normal !important;
-    font-size: 1em !important;
+
+/*align headers*/
+thead th {
+    text-align: center; 
 }
 
-.url-col {
+/*add padding to the cells*/
+#assoc-table td, #assoc-table th {
+    padding: 5px 20px;
+}
+
+/*shrink the assoc table*/
+#assoc-table {
+    width: auto;
+    min-width: 60%;
+}
+
+/*monospace*/
+.mono {
     word-break: break-all;
+    font-family: monospace;
 }
 
+/*"horizontal" headers for the infos table*/
 #infos td:first-child {
     font-weight: bold;
+    padding-right: 20px;
 }
 
+/*highlight current robot (if any)*/
 table tr.current {
     background-color: rgba(63, 81, 181, 0.3);
 }
