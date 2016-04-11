@@ -51,9 +51,28 @@ footer a {
 
 header {
     display: flex;
+    text-align: center;
+}
+
+#header {
+    width: 100%;
+    background: rgb(33, 150, 243);
+    color: white;
+    z-index: 1000;
+    margin: auto;
+}
+
+#mini-header {
     background: rgb(33, 150, 243);
     text-align: center;
     color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    width: 100%;
+    font-family: 'Roboto', sans-serif;
+    padding: 7px 0;
 }
 
 header h1 {

@@ -6,7 +6,6 @@
     <script type="text/javascript" src="/vendor/jquery-2.1.4.min.js"></script>
     <!-- ## ==== MATERIAL DESIGN LITE ==== ## -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="/vendor/dialog/mdl.dialog.css">
     <link rel="stylesheet" href="/vendor/materialize/materialize.min.css">
     <link rel="stylesheet" href="/css/admin.css">
 
@@ -16,11 +15,15 @@
 <body ng-app="thymioCaptain.admin">
 
 <header>
-    <div class="margin-auto">
-        <img class="heiafr-logo" src="/img/logo_heiafr_white.svg"/>
+    <div id="mini-header">Thymio Captain</div>
+    <div id="header">
+        <div>
+            <img class="heiafr-logo" src="/img/logo_heiafr_white.svg"/>
+        </div>
         <h1>Thymio Captain</h1>
     </div>
 </header>
+
 
 <main class="container">
     <div ng-controller="MainCtrl as ctrl" class="container"
@@ -48,8 +51,6 @@
 
 <!--material-->
 <script defer src="/vendor/materialize/materialize.min.js"></script>
-<script src="/vendor/dialog/mdl.dialog.js"></script>
-
 
 <!--rest-->
 <script type="text/javascript" src="/ajs/rest/rest.module.js"></script>
