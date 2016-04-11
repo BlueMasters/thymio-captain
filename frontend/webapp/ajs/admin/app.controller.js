@@ -24,12 +24,6 @@
 
     function MainCtrl( $scope, RestService ){
 
-        // disgusting fix for mdl + ng-include
-        $scope.contentLoaded = function(){
-            componentHandler.upgradeAllRegistered();
-        };
-
-
         var self = this;
 
         self.cardId = null;
@@ -99,12 +93,7 @@
                     msg += "\n" + data.status + " " + data.statusText;
                 }
 
-                $( '.mdl-js-snackbar' )[0].MaterialSnackbar.showSnackbar(
-                    {
-                        message: msg,
-                        timeout: 2000
-                    }
-                );
+                Materialize.toast(msg, 2000);
             }
 
             return show;
