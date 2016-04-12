@@ -65,7 +65,7 @@
     var ACTIONS = [];
 
     ACTIONS["MoveForward"] = {
-        title: "avancer",
+        title: "avance",
         color: "#FFC000", // yellow
         args : [{
             id   : "10cm",
@@ -78,51 +78,51 @@
             descr: "de 50 cm"
         }, {
             id   : "UntilWall",
-            descr: "jusqu'au mur"
+            descr: "--> mur"
         }, {
             id   : "UntilBlackFloor",
-            descr: "jusqu'à ce que le sol soit noir"
+            descr: "--> sol noir"
         }, {
             id   : "UntilWhiteFloor",
-            descr: "jusqu'à ce que le sol soit blanc"
+            descr: "--> sol blanc"
         }]
     };
 
     ACTIONS["MoveBackward"] = {
-        title: "reculer",
+        title: "recule",
         color: "#70AD47", // green
         args : ACTIONS["MoveForward"].args
     };
 
     ACTIONS["Turn"] = {
-        title: "tourner",
+        title: "tourne",
         color: "#E76D19", // orange
         args : [{
             id   : "Right45",
-            descr: "de 45° sur la droite"
+            descr: "45° droite"
+        }, {
+            id   : "Left45",
+            descr: "45° gauche"
         }, {
             id   : "Right90",
-            descr: "de 90° sur la droite"
+            descr: "90° droite"
         }, {
-            id   : "Right135",
-            descr: "de 135° sur la droite"
+            id   : "Left90",
+            descr: "90° gauche"
         }, {
             id   : "Right180",
             descr: "de 180°"
         }, {
-            id   : "Left45",
-            descr: "de 45° sur la gauche"
-        }, {
-            id   : "Left90",
-            descr: "de 90° sur la gauche"
+            id   : "Right135",
+            descr: "135° droite"
         }, {
             id   : "Left135",
-            descr: "de 135° sur la gauche"
+            descr: "135° gauche"
         }]
     };
 
     ACTIONS["FollowLine"] = {
-        title: "suivre la ligne",
+        title: "suit la ligne",
         color: "#41719C", // blue
         args : [{
             id   : "10cm",
@@ -135,7 +135,7 @@
             descr: "sur 50 cm"
         }, {
             id   : "UntilWall",
-            descr: "jusqu'au mur"
+            descr: "--> mur"
         }]
     };
 
