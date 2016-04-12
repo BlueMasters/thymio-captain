@@ -4,6 +4,11 @@
 
 /*====== containers agencement ======== */
 
+body, html, .include {
+    height: auto;
+    min-height: 100vh;
+}
+
 /* left column: fixed */
 #pushpin {
     width: 46%;
@@ -12,6 +17,7 @@
 
 /*right column*/
 #program {
+    height: 100%;
     width: 46%;
     margin: 2% 2% 2% 50%;
     /*either float: right or margin-right 50%*/
@@ -19,7 +25,7 @@
 }
 
 #drop {
-    min-height: 300px;
+    min-height: 90%;
     padding: 20px 10px 200px 10px;
     /*background: rgba(43, 187, 173, .05);*/
     background: rgba(0, 0, 0, .05);
