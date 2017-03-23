@@ -1,8 +1,13 @@
+TODO: badges
+
 # thymio-captain
 Thymio Captain is a complete system offering an easy drag-and-drop web interface (optimized for tablets) to execute programs wirelessly on [Thymio](https://www.thymio.org/home-en:home) robots. 
 
 ## Context
-This system was developed for the "Portes Ouvertes" of the HEIA-Fr on March 2015, in order for the kids to quickly and effortlessly have a feel of how great programming a robot is. Tabletts were at the kids' disposal, as well as four Thymio. 
+
+TODO: authors 
+
+This system was developed for the "Portes Ouvertes" of the HEIA-Fr on March 2016, in order for the kids to quickly and effortlessly have a feel of how great programming a robot is. Tabletts were at the kids' disposal, as well as four Thymio. 
 
 We created a course made of black lines (the road) and obstacles that the robots should follow/avoid in order to grab a basket of candies and make their way back. Upon success, kids would win the candies.
 
@@ -37,3 +42,20 @@ __Round__:
 
 TODO
 
+# Technical overview
+
+## Frontend
+
+Lucy: technos 
+
+## API
+
+Jacques: cards, security, db
+
+## Thymio
+
+Damien: folders in repo, install and limitations
+
+# Status and futur works
+
+(reference on issues)
