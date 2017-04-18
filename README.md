@@ -46,7 +46,14 @@ TODO
 
 ## Frontend
 
-Lucy: technos 
+The frontend is an AngularJS 1.5 web application. The angularjs code can be found under `frontend/webapp/ajs`. Note that the html page templates are under `frontend/webapp/internal_pages`.
+
+__Frameworks__:
+
+* [Angular Materialize](https://github.com/krescruz/angular-materialize): a library providing angular templates and directives for the Materialize CSS framework
+* [DerlinModals](https://github.com/derlin/DerlinModals): a custom-made library for creating modals with angular
+* [Decipher History](https://github.com/decipherinc/angular-history): useful for in-page history. Used mainly for the under/redo buttons
+* [ng-sortable](https://github.com/a5hik/ng-sortable): after trying many plugins, this one was the most flexible and bug-free drag-and-drop library we found. Used for the drag-and-drop cards functionality. 
 
 ## API
 
